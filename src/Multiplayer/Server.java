@@ -60,6 +60,10 @@ public class Server {
         } 
     }
     
+    /**
+     * Removes a player from the game
+     * @param id player to be removed
+     */
     public static void removeUser(int id) {
     	for(Player ply : PlayerList) {
     		if(ply.getID()== id) {
@@ -68,6 +72,10 @@ public class Server {
     	}
     }
     
+    /**
+     * Gets number of players currently connected to the server
+     * @return Number of players tracked
+     */
     public static int getPlayerCount() {
     	return PlayerList.size();
     }
@@ -94,7 +102,6 @@ class Player implements Runnable {
 	@Override
 	public void run() {
 
-		@SuppressWarnings("unused")
 		String received;
 		while (true) {
 			try {
@@ -102,6 +109,8 @@ class Player implements Runnable {
 				received = dis.readUTF();
 				if(received.startsWith("Terminate")) {
 					Server.removeUser(id);
+				}else if(received.startsWith("ReqPlayCount")) {
+					dos.writeUTF("PlayerCount: " + Server.getPlayerCount());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -1,5 +1,6 @@
 package character;
 
+import charutil.AbilityScore;
 import charutil.Dice;
 import item.Item;
 
@@ -14,7 +15,6 @@ public abstract class BaseCharacter {
 	protected Item[] equipped = new Item[2];
 
 	private int move;
-
 	private int ac;
 	
 	public BaseCharacter(int[] givenStats)
@@ -26,6 +26,8 @@ public abstract class BaseCharacter {
 				stats[i] = givenStats[i];
 			}
 		}
+		move = 6;
+		ac = 10 + AbilityScore.getModifier(stats[AbilityScore.dex.ordinal()]);
 	}
 	
 	protected abstract int generateHP();

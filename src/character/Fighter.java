@@ -1,6 +1,8 @@
 package character;
 
 import charutil.Dice;
+import item.Item;
+import item.Weapon;
 
 public class Fighter extends BaseCharacter {
 
@@ -18,10 +20,20 @@ public class Fighter extends BaseCharacter {
 	}
 
 	@Override
-	protected void attack() 
+	protected int attack() 
 	{
-		// TODO Auto-generated method stub
-		
+		if(super.equipped[Item.LEFT] instanceof Weapon)
+		{
+			return super.equipped[Item.LEFT].use();
+		}
+		else if (super.equipped[Item.RIGHT] instanceof Weapon)
+		{
+			return super.equipped[Item.RIGHT].use();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	@Override

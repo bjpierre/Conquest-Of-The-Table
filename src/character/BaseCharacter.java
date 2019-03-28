@@ -1,6 +1,7 @@
 package character;
 
 import charutil.Dice;
+import item.Item;
 
 public abstract class BaseCharacter {
 
@@ -10,6 +11,7 @@ public abstract class BaseCharacter {
 	protected int[] saves = new int[NUM_OF_STATS];
 	protected int hp;
 	protected Dice hpDice;
+	protected Item[] equipped = new Item[2];
 
 	private int move;
 
@@ -27,7 +29,7 @@ public abstract class BaseCharacter {
 	}
 	
 	protected abstract int generateHP();
-	protected abstract void attack();
+	protected abstract int attack();
 	protected abstract void levelUp();
 	
 }

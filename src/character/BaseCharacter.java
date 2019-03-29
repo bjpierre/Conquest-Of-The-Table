@@ -16,6 +16,7 @@ public abstract class BaseCharacter {
 
 	private int move;
 	private int ac;
+	private int remove;
 	
 	public BaseCharacter(int[] givenStats)
 	{

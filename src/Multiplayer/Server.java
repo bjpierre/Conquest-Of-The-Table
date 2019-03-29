@@ -35,7 +35,7 @@ public class Server {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream()); 
             Player joining = new Player(socket, id++, dis, dos); 
             Thread t = new Thread(joining); 
-
+            dos.writeUTF("MKUSR-" + id);
             PlayerList.add(joining); 
 
             t.start(); 

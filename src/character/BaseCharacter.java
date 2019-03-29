@@ -15,6 +15,7 @@ public abstract class BaseCharacter {
 	protected Item[] equipped = new Item[2];
 
 	private int move;
+	private int temp;
 	private int ac;
 	
 	public BaseCharacter(int[] givenStats)

@@ -47,12 +47,11 @@ public class Server {
      * @param message String to be broadcast, should be in form name:message
      * @param s socket of origin to prevent sender receiving
      */
-    private static void broadcast(String message,Socket s) {
+    static void broadcast(String message, Socket s) {
     	for (Player user : Server.PlayerList)  
         { 
                 try {
-                	if(!user.s.equals(s))
-					user.dos.writeUTF(message);
+                	if(!user.s.equals(s)) user.dos.writeUTF(message);
 				} catch (Exception e) {
 					e.printStackTrace();
 				} 
@@ -67,6 +66,14 @@ public class Server {
     public static void removeUser(int id) {
     	for(Player ply : PlayerList) {
     		if(ply.getID()== id) {
+    			try {
+					ply.dis.close();
+	    			ply.dos.close();
+	    			ply.s.close();
+	    			ply.stop();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
     			PlayerList.remove(ply);
     		}
     	}
@@ -91,32 +98,42 @@ class Player implements Runnable {
 	final DataOutputStream dos;
 	int id;
 	Socket s;
+	Boolean stopped;
 
 	public Player(Socket s, int id, DataInputStream dis, DataOutputStream dos) {
 		this.dis = dis;
 		this.dos = dos;
 		this.id = id;
 		this.s = s;
+		stopped = false;
 	}
 
 	@Override
 	public void run() {
 
 		String received;
-		while (true) {
+		while (!stopped) {
 			try {
 				// TODO Handle user events
 				received = dis.readUTF();
+				//System.out.println(received);
 				if(received.startsWith("Terminate")) {
 					Server.removeUser(id);
 				}else if(received.startsWith("ReqPlayCount")) {
 					dos.writeUTF("PlayerCount: " + Server.getPlayerCount());
+				}else if(received.startsWith("CrX")){
+					System.out.println("Creating x at " + received.substring(6,8) + "," + received.substring(9,11));
+					Server.broadcast(received, s);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
+	}
+	
+	public void stop() {
+		stopped = true;
 	}
 	
 	public int getID() {

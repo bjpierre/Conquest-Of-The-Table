@@ -14,13 +14,24 @@ public class Rogue extends BaseCharacter {
 	}
 
 	@Override
-	protected int attack() {
+	public int attack() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	protected void levelUp() {
+	public void levelUp() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String specialAbilityName() {
+		return "Sneak Attack";
+	}
+
+	@Override
+	public void useSpecialAbility() {
 		// TODO Auto-generated method stub
 		
 	}

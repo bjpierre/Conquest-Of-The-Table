@@ -14,13 +14,25 @@ public class Wizard extends BaseCharacter {
 	}
 
 	@Override
-	protected int attack() {
+	public int attack() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	protected void levelUp() {
+	public void levelUp() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String specialAbilityName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void useSpecialAbility() {
 		// TODO Auto-generated method stub
 		
 	}

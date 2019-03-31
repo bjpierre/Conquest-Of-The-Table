@@ -20,15 +20,15 @@ public class Fighter extends BaseCharacter {
 	}
 
 	@Override
-	protected int attack() 
+	public int attack() 
 	{
-		if(super.equipped[Item.LEFT] instanceof Weapon)
+		if(super.equipped[Item.PRIMARY] instanceof Weapon)
 		{
-			return super.equipped[Item.LEFT].use();
+			return super.equipped[Item.PRIMARY].use();
 		}
-		else if (super.equipped[Item.RIGHT] instanceof Weapon)
+		else if (super.equipped[Item.SECONDARY] instanceof Weapon)
 		{
-			return super.equipped[Item.RIGHT].use();
+			return super.equipped[Item.SECONDARY].use();
 		}
 		else
 		{
@@ -37,10 +37,18 @@ public class Fighter extends BaseCharacter {
 	}
 
 	@Override
-	protected void levelUp()
+	public void levelUp()
 	{
 		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public String specialAbilityName() {
+		return "Extra Attack";
+	}
+
+	@Override
+	public void useSpecialAbility() {
 	}
 
 }

@@ -23,6 +23,13 @@ public class MultiplayerHandler {
 	Square[][] board;
 	Thread readMessage;
 
+	/**
+	 * Creates and handles a connection to a multiplayer server
+	 * @param Address Server address
+	 * @param port Port Game is hosted on
+	 * @param board Reference to the board
+	 * @throws IOException if connection fails
+	 */
 	public MultiplayerHandler(String Address, int port, Square[][] board) throws IOException {
 			ip = InetAddress.getByName(Address);
 			socket = new Socket(ip, port);
@@ -30,12 +37,20 @@ public class MultiplayerHandler {
 		run();
 	}
 
+	/**
+	 * Creates and handles a connection to a multiplayer server with basic functionality
+	 * @throws IOException if connection fails
+	 */
 	public MultiplayerHandler() throws IOException {
 			ip = InetAddress.getByName("localhost");
 			socket = new Socket(ip, 4444);
 		run();
 	}
 
+	/**
+	 * Sets up streams
+	 * @return False if connection fails
+	 */
 	public boolean run() {
 		try {
 			dis = new DataInputStream(socket.getInputStream());
@@ -59,7 +74,9 @@ public class MultiplayerHandler {
 							System.out.println("Assigned UID: " + id );
 						}else if(msg.startsWith("CrX-")){
 							setGridx(msg);
-						} else {
+						} else if(msg.startsWith("Restart")) { 
+							restart();
+						}else{
 							System.out.print(msg + "\n>");
 						}
 					} catch (IOException e) {
@@ -75,6 +92,11 @@ public class MultiplayerHandler {
 		return true;
 	}
 	
+	/**
+	 * Sets an x on a board when command received
+	 * @param message Message from other client, includes where to place x
+	 * @return false if anything fails
+	 */
 	public boolean setGridx(String message) {
 		try {
 			int x = Integer.parseInt(message.substring(6,8));
@@ -90,11 +112,20 @@ public class MultiplayerHandler {
 		return true;
 	}
 	
+	/**
+	 * Requests player count
+	 * @return nothing at the moment
+	 * @throws IOException
+	 */
 	public int getPlayerCount() throws IOException {
 		dos.writeUTF("ReqPlayCount");
 		return 0;
 	}
 	
+	/**
+	 * Leaves server
+	 * @return False if any issues occur
+	 */
 	@SuppressWarnings("deprecation")
 	public boolean leaveServer(){
 		try {
@@ -112,7 +143,7 @@ public class MultiplayerHandler {
 		return true;
 	}
 
-	public boolean sendMessage(String message) {
+	private boolean sendMessage(String message) {
 		try {
 			dos.writeUTF(message);
 		} catch (Exception e) {
@@ -123,6 +154,12 @@ public class MultiplayerHandler {
 		return true;
 	}
 
+	/**
+	 * Sends signal to server 
+	 * @param x x Location to create an x
+	 * @param y y Location to create an x
+	 * @return False if anything goes wrong
+	 */
 	public boolean createX(int x, int y) {
 		try {
 			System.out.println("" + x + "," + y);
@@ -134,6 +171,13 @@ public class MultiplayerHandler {
 		return true;
 	}
 
+	/**
+	 * Example of how a method will look when the game is actually implemented
+	 * @param UnitId Id of the unit to move
+	 * @param x x Location to create an x
+	 * @param y y Location to create an x
+	 * @return False if anything goes wrong
+	 */
 	public boolean moveUnit(int UnitId, int x, int y) {
 		try {
 			sendMessage("MVU-" + id + "-" + x + "-" + y + "..");
@@ -144,9 +188,35 @@ public class MultiplayerHandler {
 		return true;
 	}
 	
-	public boolean restart() {
+	/**
+	 * Tell all clients to restart
+	 * @return False if anything goes wrong
+	 */
+	public boolean sendRestart() {
+		System.out.println("Sending restart");
 		try {
 			sendMessage("Restart..");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Sets the board to empty
+	 * @return False if anything goes wrong
+	 */
+	private boolean restart() {
+		System.out.println("Restarting");
+		try {
+			int row, column;
+
+			for (row = 0; row < 10; row++) {
+				for (column = 0; column < 15; column++) {
+					board[row][column].setState();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

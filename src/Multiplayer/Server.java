@@ -116,15 +116,18 @@ class Player implements Runnable {
 			try {
 				// TODO Handle user events
 				received = dis.readUTF();
-				//System.out.println(received);
+				System.out.println(received);
 				if(received.startsWith("Terminate")) {
 					Server.removeUser(id);
 				}else if(received.startsWith("ReqPlayCount")) {
 					dos.writeUTF("PlayerCount: " + Server.getPlayerCount());
 				}else if(received.startsWith("CrX")){
-					System.out.println("Creating x at " + received.substring(6,8) + "," + received.substring(9,11));
+					//System.out.println("Creating x at " + received.substring(6,8) + "," + received.substring(9,11));
 					Server.broadcast(received, s);
-				}
+				}else if(received.startsWith("Restart")) {
+					//System.out.println("Restarting");
+					Server.broadcast(received, s);
+				}else Server.broadcast(received, s);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

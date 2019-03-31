@@ -19,9 +19,15 @@ public class Board extends Application {
 	BorderPane border;
 
 	Button restart;
-
+	
+	/**
+	 * Connection to multi-player handler
+	 */
 	MultiplayerHandler connection;
 	
+	/**
+	 * Variable to keep track of whether the server is connected or not
+	 */
 	Boolean connected;
 
 	public static void main(String[] args) {
@@ -30,11 +36,12 @@ public class Board extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		
+		//Connect to multi-player or set flag indicating no connection
 		try {
-			connection = new MultiplayerHandler("localhost", 4444, box);
+			connection = new MultiplayerHandler("lcoalhost", 4444, box);
 			connected = true;
 		}catch(Exception E) {
-			//E.printStackTrace();
 			System.out.println("Unable to connect to server");
 			connected = false;
 		}
@@ -61,7 +68,7 @@ public class Board extends Application {
 		stage.setScene(scene);
 		stage.show();
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
+			//Override on close process to add leaving server to list of commands
 			@Override
 			public void handle(WindowEvent event) {
 				if(connected) connection.leaveServer();
@@ -72,7 +79,7 @@ public class Board extends Application {
 	}
 
 	private void restart() {
-		if(connected) connection.restart();
+		if(connected) connection.sendRestart();
 		int row, column;
 
 		for (row = 0; row < 10; row++) {

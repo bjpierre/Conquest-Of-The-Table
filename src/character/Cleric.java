@@ -1,40 +1,30 @@
 package character;
 
+import charutil.Dice;
+
 public class Cleric extends BaseCharacter {
 
+	private Dice healDice;
+	
 	public Cleric(int[] givenStats) {
-		super(givenStats);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	protected int generateHP() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int attack() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void levelUp() {
-		// TODO Auto-generated method stub
-		
+		super(givenStats, 8, 2);
+		healDice = new Dice(8);
 	}
 
 	@Override
 	public String specialAbilityName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Heal";
 	}
 
 	@Override
-	public void useSpecialAbility() {
+	public int useSpecialAbility() {
+		return healDice.roll();
+	}
+
+	@Override
+	public boolean canUseSpecialAbility() {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 }

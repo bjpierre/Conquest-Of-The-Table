@@ -20,8 +20,10 @@ public abstract class BaseCharacter {
 
 	private int move;
 	private int ac;
+	private int usesOfSpecial;
+	private int rangeOfSpecial;
 	
-	protected BaseCharacter(int[] givenStats)
+	protected BaseCharacter(int[] givenStats, int hpDiceSides, int specialRange)
 	{
 		d20 = new Dice(20);
 		if(givenStats.length == NUM_OF_STATS)
@@ -34,6 +36,10 @@ public abstract class BaseCharacter {
 		}
 		move = 6;
 		ac = 10 + mods[AbilityScore.dex.ordinal()];
+		usesOfSpecial = 1;
+		rangeOfSpecial = specialRange;
+		hpDice = new Dice(hpDiceSides);
+		hp = hpDice.roll();
 	}
 	
 	public int rollInit()
@@ -46,7 +52,11 @@ public abstract class BaseCharacter {
 		Item prime = equipped[Item.PRIMARY];
 		if(prime instanceof Weapon)
 		{
-			if(((Weapon) prime).isFinesse())
+			if(prime instanceof ArcaneFocus)
+			{
+				return d20.roll() + mods[AbilityScore.intl.ordinal()];
+			}
+			else if(((Weapon) prime).isFinesse())
 			{
 				return d20.roll() + mods[AbilityScore.dex.ordinal()];
 			}
@@ -54,10 +64,6 @@ public abstract class BaseCharacter {
 			{
 				return d20.roll() + mods[AbilityScore.str.ordinal()];
 			}
-		}
-		else if(prime instanceof ArcaneFocus)
-		{
-			return d20.roll() + stats[AbilityScore.intl.ordinal()];
 		}
 		else
 		{
@@ -76,11 +82,55 @@ public abstract class BaseCharacter {
 		return ac;
 	}
 	
-	protected abstract int generateHP();
-	public abstract int attack();
-	public abstract void levelUp();
+	protected int generateHP()
+	{
+		return hpDice.roll();
+	}
+	
+	public boolean canUseSpecialAbility()
+	{
+		return (usesOfSpecial > 0);
+	}
+	
+	public int useSpecialAbility()
+	{
+		return usesOfSpecial--;
+	}
+	
+	public int rangeOfSpecial()
+	{
+		return rangeOfSpecial;
+	}
+	
+	public int attack() 
+	{
+		Item prime = equipped[Item.PRIMARY];
+		if(prime instanceof Weapon)
+		{
+			int bonus;
+			
+			if(prime instanceof ArcaneFocus)
+			{
+				bonus = 0;
+			}
+			else if(((Weapon) prime).isFinesse())
+			{
+				bonus = mods[AbilityScore.dex.ordinal()];
+			}
+			else
+			{
+				bonus = mods[AbilityScore.str.ordinal()];
+			}
+			
+			return prime.use() + bonus;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	
 	public abstract String specialAbilityName();
-	public abstract void useSpecialAbility();
 	
 	
 	

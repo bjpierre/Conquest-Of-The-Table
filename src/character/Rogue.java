@@ -1,28 +1,16 @@
 package character;
 
+import charutil.Dice;
+
 public class Rogue extends BaseCharacter {
+	
+	private int sneakAtkNum;
+	private Dice sneakAtkDice;
 
 	public Rogue(int[] givenStats) {
-		super(givenStats);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	protected int generateHP() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int attack() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void levelUp() {
-		// TODO Auto-generated method stub
-		
+		super(givenStats, 8, 1);
+		sneakAtkNum = 1;
+		sneakAtkDice = new Dice(6);
 	}
 
 	@Override
@@ -31,9 +19,12 @@ public class Rogue extends BaseCharacter {
 	}
 
 	@Override
-	public void useSpecialAbility() {
-		// TODO Auto-generated method stub
-		
+	public int useSpecialAbility() {
+		int sum = 0;
+		for(int i = 0; i < sneakAtkNum; i++)
+		{
+			sum += sneakAtkDice.roll();
+		}
+		return sum;
 	}
-
 }

@@ -8,15 +8,15 @@ public abstract class Weapon implements Item {
 	protected String name;
 	protected DamageType dmgType;
 	protected boolean isFinesse;
-	protected int reach;
+	protected int range;
 	
-	protected Weapon(int diceSides, String givenName, DamageType givenType, boolean finesse, int givenReach)
+	protected Weapon(int diceSides, String givenName, DamageType givenType, boolean finesse, int givenRange)
 	{
 		dmgDice = new Dice(diceSides);
 		name = givenName;
 		dmgType = givenType;
 		isFinesse = finesse;
-		reach = givenReach;
+		range = givenRange;
 	}
 	
 	public int use()
@@ -27,5 +27,10 @@ public abstract class Weapon implements Item {
 	public boolean isFinesse()
 	{
 		return isFinesse;
+	}
+	
+	public int getRange()
+	{
+		return range;
 	}
 }

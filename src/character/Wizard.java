@@ -1,40 +1,24 @@
 package character;
 
+import charutil.Dice;
+
 public class Wizard extends BaseCharacter {
 
+	private Dice fireballDice;
+	
 	public Wizard(int[] givenStats) {
-		super(givenStats);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	protected int generateHP() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int attack() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void levelUp() {
-		// TODO Auto-generated method stub
-		
+		super(givenStats, 6, 5);
+		fireballDice = new Dice (6);
 	}
 
 	@Override
 	public String specialAbilityName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Fireball";
 	}
 
 	@Override
-	public void useSpecialAbility() {
-		// TODO Auto-generated method stub
-		
+	public int useSpecialAbility() {
+		return fireballDice.roll();
 	}
 
 }

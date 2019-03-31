@@ -23,26 +23,16 @@ public class MultiplayerHandler {
 	Square[][] board;
 	Thread readMessage;
 
-	public MultiplayerHandler(String Address, int port, Square[][] board) {
-		try {
+	public MultiplayerHandler(String Address, int port, Square[][] board) throws IOException {
 			ip = InetAddress.getByName(Address);
 			socket = new Socket(ip, port);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		this.board = board;
 		run();
 	}
 
-	public MultiplayerHandler() {
-		try {
+	public MultiplayerHandler() throws IOException {
 			ip = InetAddress.getByName("localhost");
 			socket = new Socket(ip, 4444);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		run();
 	}
 
@@ -51,7 +41,8 @@ public class MultiplayerHandler {
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Unable to communicate with server");
 			return false;
 		}
 
@@ -90,7 +81,8 @@ public class MultiplayerHandler {
 			int y = Integer.parseInt(message.substring(9,11));
 			board[x][y].mouseEvent();
 		}catch(Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Unable to create an x");
 			return false;
 		}
 		
@@ -100,7 +92,6 @@ public class MultiplayerHandler {
 	
 	public int getPlayerCount() throws IOException {
 		dos.writeUTF("ReqPlayCount");
-
 		return 0;
 	}
 	
@@ -113,8 +104,9 @@ public class MultiplayerHandler {
 			dos.close();
 			socket.close();
 			readMessage.stop();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			//e.printStackTrace();
+			System.out.println("Error leaving server");
 			return false;
 		}
 		return true;
@@ -123,8 +115,9 @@ public class MultiplayerHandler {
 	public boolean sendMessage(String message) {
 		try {
 			dos.writeUTF(message);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			//e.printStackTrace();
+			System.out.println("Unable to send to server");
 			return false;
 		}
 		return true;

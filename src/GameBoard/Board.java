@@ -21,6 +21,8 @@ public class Board extends Application {
 	Button restart;
 
 	MultiplayerHandler connection;
+	
+	Boolean connected;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -28,7 +30,14 @@ public class Board extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		connection = new MultiplayerHandler("localhost", 4444, box);
+		try {
+			connection = new MultiplayerHandler("localhost", 4444, box);
+			connected = true;
+		}catch(Exception E) {
+			//E.printStackTrace();
+			System.out.println("Unable to connect to server");
+			connected = false;
+		}
 
 		border = new BorderPane();
 		GridPane game = new GridPane();
@@ -55,7 +64,7 @@ public class Board extends Application {
 
 			@Override
 			public void handle(WindowEvent event) {
-				connection.leaveServer();
+				if(connected) connection.leaveServer();
 
 			}
 
@@ -63,7 +72,7 @@ public class Board extends Application {
 	}
 
 	private void restart() {
-			connection.restart();
+		if(connected) connection.restart();
 		int row, column;
 
 		for (row = 0; row < 10; row++) {
@@ -103,7 +112,7 @@ public class Board extends Application {
 		public void mouseEvent() {
 			if (!x.isVisible()) {
 				x.setVisible(true);
-					connection.createX(xloc, yloc);
+				if(connected) connection.createX(xloc, yloc);
 			} else {
 
 			}

@@ -39,7 +39,7 @@ public abstract class BaseCharacter {
 		usesOfSpecial = 1;
 		rangeOfSpecial = specialRange;
 		hpDice = new Dice(hpDiceSides);
-		hp = hpDice.roll();
+		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
 	}
 	
 	public int rollInit()

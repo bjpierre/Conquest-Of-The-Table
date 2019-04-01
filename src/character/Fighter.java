@@ -18,11 +18,4 @@ public class Fighter extends BaseCharacter {
 		super.useSpecialAbility();
 		return attack();
 	}
-
-	@Override
-	public boolean canUseSpecialAbility() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

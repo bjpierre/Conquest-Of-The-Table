@@ -20,11 +20,4 @@ public class Cleric extends BaseCharacter {
 	public int useSpecialAbility() {
 		return healDice.roll();
 	}
-
-	@Override
-	public boolean canUseSpecialAbility() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

@@ -131,7 +131,4 @@ public abstract class BaseCharacter {
 	}
 	
 	public abstract String specialAbilityName();
-	
-	
-	
 }

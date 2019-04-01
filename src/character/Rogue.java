@@ -27,4 +27,14 @@ public class Rogue extends BaseCharacter {
 		}
 		return sum;
 	}
+	
+	@Override
+	public boolean canUseSpecialAbility() {
+		return super.canUseSpecialAbility() || allyNearBy();
+	}
+	
+	private boolean allyNearBy() {
+		//TODO
+		return false;
+	}
 }

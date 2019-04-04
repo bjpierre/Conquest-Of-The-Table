@@ -1,6 +1,7 @@
 package GameBoard;
 
 import Multiplayer.MultiplayerHandler;
+import character.BaseCharacter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -100,6 +101,7 @@ public class Board extends Application {
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
+		private BaseCharacter c;
 
 		// Used to create and update the board
 		public Square(int xloc, int yloc, int row, int column) {
@@ -197,6 +199,10 @@ public class Board extends Application {
 
 		public int getY() {
 			return yloc;
+		}
+		
+		public BaseCharacter getCharacter() {
+			return c;
 		}
 	}
 }

@@ -130,5 +130,11 @@ public abstract class BaseCharacter {
 		}
 	}
 	
+	public boolean takeDamage(int dmg)
+	{
+		hp -= dmg;
+		return true;
+	}
+	
 	public abstract String specialAbilityName();
 }

@@ -2,6 +2,7 @@ package charutil;
 import java.util.ArrayList;
 
 import GameBoard.Board.Square;
+import character.BaseCharacter;
 
 public class CombatUtil {
 	
@@ -68,5 +69,13 @@ public class CombatUtil {
 			x = givenX;
 			y = givenY;
 		}
+	}
+	
+	public boolean attackSquare(BaseCharacter attacker, BaseCharacter defender)
+	{
+		int toHit = attacker.weaponToHit();
+		if(defender.getAC() <= toHit)
+			defender.takeDamage(attacker.attack());
+		return false;
 	}
 }

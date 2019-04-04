@@ -18,8 +18,8 @@ public class CharacterAndBoardUtil {
 	 */
 	public ArrayList<Pair> canAttack(int x, int y, Square[][] board)
 	{
-		int width = board.length;
-		int height = board[0].length;
+		int width = board[board.length].length;
+		int height = board.length;
 		
 		ArrayList<Pair> locations = new ArrayList<Pair>();
 		
@@ -91,7 +91,7 @@ public class CharacterAndBoardUtil {
 	private HashSet<Pair> recursiveMoveList(int x, int y, Square[][] board, int d)
 	{
 		HashSet<Pair> moves = new HashSet<Pair>();
-		if(x >= 0 && y >= 0 && x < board.length && y < board[board.length].length)
+		if(x >= 0 && y >= 0 && x < board[board.length].length && y < board.length)
 		{
 			moves.add(new Pair(x,y));
 			if( d > 0)

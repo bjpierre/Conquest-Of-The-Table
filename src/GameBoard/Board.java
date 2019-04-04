@@ -61,11 +61,11 @@ public class Board extends Application {
 			for (column = 0; column < 15; column++) {
 				if(column == 7)
 				{
-					game.add(box[row][column] = new Square(row, column, column), column, row);
+					game.add(box[row][column] = new Square(row, column, row, column), column, row);
 				}
 				else
 				{
-					game.add(box[row][column] = new Square(row, column, column), column, row);
+					game.add(box[row][column] = new Square(row, column, row, column), column, row);
 				}
 			}
 		}
@@ -102,17 +102,35 @@ public class Board extends Application {
 		private int xloc, yloc;
 
 		// Used to create and update the board
-		public Square(int xloc, int yloc, int column) {
+		public Square(int xloc, int yloc, int row, int column) {
 			this.xloc = xloc;
 			this.yloc = yloc;
-
 			
 			Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
-			ImageView grass = new ImageView(grassImg);
+			ImageView grass = new ImageView();
+			grass.setImage(grassImg);
 			
 			
 			Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
-			ImageView path = new ImageView(pathImg);
+			ImageView path = new ImageView();
+			path.setImage(pathImg);
+			
+			
+			Image knightImg = new Image(getClass().getResource("pixelKnight.png").toExternalForm());
+			ImageView knight = new ImageView();
+			knight.setImage(knightImg);
+			
+			Image wizardImg = new Image(getClass().getResource("pixelWizard.png").toExternalForm());
+			ImageView wizard = new ImageView();
+			wizard.setImage(wizardImg);
+			
+			Image clericImg = new Image(getClass().getResource("pixelCleric.png").toExternalForm());
+			ImageView cleric = new ImageView();
+			cleric.setImage(clericImg);
+			
+			Image rogueImg = new Image(getClass().getResource("pixelRogue.png").toExternalForm());
+			ImageView rogue = new ImageView();
+			rogue.setImage(rogueImg);
 			
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
@@ -125,6 +143,18 @@ public class Board extends Application {
 			path.setFitWidth(99);
 			path.setPreserveRatio(true);
 			
+			knight.setFitWidth(99);
+			knight.setPreserveRatio(true);
+			
+			wizard.setFitWidth(99);
+			wizard.setPreserveRatio(true);
+			
+			cleric.setFitWidth(99);
+			cleric.setPreserveRatio(true);
+			
+			rogue.setFitWidth(99);
+			rogue.setPreserveRatio(true);
+			
 			if(column != 7)
 			{
 				this.getChildren().add(grass);
@@ -132,6 +162,23 @@ public class Board extends Application {
 			else
 			{
 				this.getChildren().add(path);
+			}
+			
+			if((column == 2 && row == 1) || (column == 2 && row == 8) || (column == 12 && row == 1) || (column == 12  && row == 8))
+			{
+				this.getChildren().add(knight);
+			}
+			if((column == 7 && row == 1) || (column == 7 && row == 8))
+			{
+				this.getChildren().add(wizard);
+			}
+			if((column == 5 && row == 1) || (column == 5 && row == 8))
+			{
+				this.getChildren().add(cleric);
+			}
+			if((column == 9 && row == 1) || (column == 9 && row == 8))
+			{
+				this.getChildren().add(rogue);
 			}
 		}
 

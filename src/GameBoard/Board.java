@@ -164,7 +164,7 @@ public class Board extends Application {
 				this.getChildren().add(path);
 			}
 			
-			if((column == 2 && row == 1) || (column == 2 && row == 8) || (column == 12 && row == 1) || (column == 12  && row == 8))
+			if((column == 1 && row == 1) || (column == 1 && row == 8) || (column == 13 && row == 1) || (column == 13  && row == 8))
 			{
 				this.getChildren().add(knight);
 			}
@@ -172,11 +172,11 @@ public class Board extends Application {
 			{
 				this.getChildren().add(wizard);
 			}
-			if((column == 5 && row == 1) || (column == 5 && row == 8))
+			if((column == 4 && row == 1) || (column == 4 && row == 8))
 			{
 				this.getChildren().add(cleric);
 			}
-			if((column == 9 && row == 1) || (column == 9 && row == 8))
+			if((column == 10 && row == 1) || (column == 10 && row == 8))
 			{
 				this.getChildren().add(rogue);
 			}

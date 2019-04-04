@@ -1,7 +1,11 @@
 package GameBoard;
 
+import java.util.HashSet;
+
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
+import charutil.CharacterAndBoardUtil;
+import charutil.CharacterAndBoardUtil.Pair;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -9,9 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -134,10 +140,17 @@ public class Board extends Application {
 			ImageView rogue = new ImageView();
 			rogue.setImage(rogueImg);
 			
+			Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
+			ImageView movesTile = new ImageView();
+			movesTile.setImage(movesTileImg);
+			
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(100, 100);
 			this.setOnMouseClicked(e -> mouseEvent());
+			
+			movesTile.setFitWidth(99);
+			movesTile.setPreserveRatio(true);
 
 			grass.setFitWidth(99);
 			grass.setPreserveRatio(true);
@@ -185,8 +198,41 @@ public class Board extends Application {
 		}
 
 		// Gets mouse event
+		/*EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				EventType<MouseEvent> NULL = null;
+				if(MouseEvent.MOUSE_CLICKED!=NULL)
+				{
+					int x = MouseEvent.MOUSE_CLICKED.getSceneX();
+					int y = MouseEvent.MOUSE_CLICKED.getSceneY();
+				}
+				
+				
+			}
+		};*/
 		public void mouseEvent() {
 			if(connected) connection.createX(xloc, yloc);
+			//BaseCharacter cCheck = getCharacter();
+			if(c==null)
+			{
+				return;
+			}
+			else {
+			HashSet<Pair> moves = CharacterAndBoardUtil.moveList(xloc, yloc, box);
+			}
+		}
+		
+		private void whereYouCanGo(HashSet<Pair> yaMoves)
+		{
+			Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
+			ImageView movesTile = new ImageView();
+			movesTile.setImage(movesTileImg);
+			for(Pair cords : yaMoves) {
+				if(box[cords.getY()][cords.getX()]==null)
+				{
+					box[cords.getY()][cords.getX()].getChildren().add(movesTile);
+				}
+			}
 		}
 
 		public void setState() {

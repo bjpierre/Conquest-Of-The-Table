@@ -4,6 +4,9 @@ import java.util.HashSet;
 
 import GameBoard.Board.Square;
 import character.BaseCharacter;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.scene.input.MouseEvent;
 
 public class CharacterAndBoardUtil {
 	
@@ -18,8 +21,8 @@ public class CharacterAndBoardUtil {
 	 */
 	public ArrayList<Pair> canAttack(int x, int y, Square[][] board)
 	{
-		int width = board.length;
-		int height = board[0].length;
+		int width = board[board.length].length;
+		int height = board.length;
 		
 		ArrayList<Pair> locations = new ArrayList<Pair>();
 		
@@ -63,12 +66,20 @@ public class CharacterAndBoardUtil {
 		return locations;
 	}
 	
-	public class Pair {
+	public static class Pair {
 		int x, y;
 		public Pair(int givenX, int givenY)
 		{
 			x = givenX;
 			y = givenY;
+		}
+		public int getX()
+		{
+			return x;
+		}
+		public int getY()
+		{
+			return y;
 		}
 	}
 	
@@ -80,7 +91,7 @@ public class CharacterAndBoardUtil {
 		return false;
 	}
 	
-	public HashSet<Pair> moveList(int x, int y, Square[][] board)
+	public static HashSet<Pair> moveList(int x, int y, Square[][] board)
 	{
 		BaseCharacter c = board[x][y].getCharacter();
 		int mv = c.getMove();
@@ -88,10 +99,10 @@ public class CharacterAndBoardUtil {
 	}
 	
 	//this is pretty naive, will rework - conor
-	private HashSet<Pair> recursiveMoveList(int x, int y, Square[][] board, int d)
+	private static HashSet<Pair> recursiveMoveList(int x, int y, Square[][] board, int d)
 	{
 		HashSet<Pair> moves = new HashSet<Pair>();
-		if(x >= 0 && y >= 0 && x < board.length && y < board[board.length].length)
+		if(x >= 0 && y >= 0 && x < board[board.length].length && y < board.length)
 		{
 			moves.add(new Pair(x,y));
 			if( d > 0)
@@ -117,4 +128,13 @@ public class CharacterAndBoardUtil {
 		}
 		return moves;
 	}
+	/*public HashSet<Pair> showMoves(new EventHandler<MouseEvent>, Square[][] board){
+		int x = MouseEvent.MOUSE_CLICKED.getSceneX();
+		int y = MouseEvent.MOUSE_CLICKED.getSceneY();
+		return moveList(x,y,board);
+	}*/
+	
+	
+
+	
 }

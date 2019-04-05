@@ -10,6 +10,7 @@ public abstract class BaseCharacter {
 
 	protected final int NUM_OF_STATS = 6;
 	protected Dice d20;
+	protected static final int[] BASE_ARRAY = {10, 10, 10, 10, 10, 10};
 	
 	protected int[] stats = new int[NUM_OF_STATS];
 	protected int[] mods = new int[NUM_OF_STATS];
@@ -22,6 +23,11 @@ public abstract class BaseCharacter {
 	private int ac;
 	private int usesOfSpecial;
 	private int rangeOfSpecial;
+	
+	protected BaseCharacter(int hpDiceSides, int SpecialRange)
+	{
+		this(BASE_ARRAY, hpDiceSides, SpecialRange);
+	}
 	
 	protected BaseCharacter(int[] givenStats, int hpDiceSides, int specialRange)
 	{

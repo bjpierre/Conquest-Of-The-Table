@@ -7,6 +7,11 @@ public class Rogue extends BaseCharacter {
 	private int sneakAtkNum;
 	private Dice sneakAtkDice;
 
+	public Rogue()
+	{
+		super(8,1);
+	}
+	
 	public Rogue(int[] givenStats) {
 		super(givenStats, 8, 1);
 		sneakAtkNum = 1;

@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
+import character.Fighter;
 import charutil.CharacterAndBoardUtil;
 import charutil.CharacterAndBoardUtil.Pair;
 import javafx.application.Application;
@@ -13,11 +14,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -182,6 +181,7 @@ public class Board extends Application {
 			if((column == 1 && row == 1) || (column == 1 && row == 8) || (column == 13 && row == 1) || (column == 13  && row == 8))
 			{
 				this.getChildren().add(knight);
+				c = new Fighter();
 			}
 			if((column == 7 && row == 1) || (column == 7 && row == 8))
 			{

@@ -15,7 +15,7 @@ import java.util.Vector;
  */
 public class Server {
 	static Vector<Player> PlayerList = new Vector<>();
-	static final int port = 4444;
+	static final int port = 5656;
 	static final String address = "LocalHost";
 	static int id = 0;
 

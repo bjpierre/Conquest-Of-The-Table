@@ -1,7 +1,8 @@
 package GameBoard;
 
+import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
-import character.BaseCharacter;
+import character.*;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,22 +16,38 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 public class Board extends Application {
 	public Square[][] box = new Square[10][15];
 
 	BorderPane border;
 
 	Button restart;
+
+	/**
+	 * Temp variable to track moving a unit
+	 */
+	protected Boolean moveCharacter;
+
+	protected Square tempSquare;
 	
 	/**
 	 * Connection to multi-player handler
 	 */
-	MultiplayerHandler connection;
+	protected MultiplayerHandler connection;
 	
 	/**
 	 * Variable to keep track of whether the server is connected or not
 	 */
-	Boolean connected;
+	protected Boolean connected;
+
+	/**
+	 * List of all characters in the board
+	 */
+	protected ArrayList<CharacterHandler> CharacterArrayList;
+
 
 	public static void main(String[] args) {
 		launch(args);
@@ -41,7 +58,7 @@ public class Board extends Application {
 		
 		//Connect to multi-player or set flag indicating no connection
 		try {
-			connection = new MultiplayerHandler("lcoalhost", 4444, box);
+			connection = new MultiplayerHandler("lcoalhost", 5656, box);
 			connected = true;
 		}catch(Exception E) {
 			System.out.println("Unable to connect to server");
@@ -76,16 +93,21 @@ public class Board extends Application {
 		stage.setTitle("Temp");
 		stage.setScene(scene);
 		stage.show();
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			//Override on close process to add leaving server to list of commands
-			@Override
-			public void handle(WindowEvent event) {
-				if(connected) connection.leaveServer();
-
-			}
+		//Override on close process to add leaving server to list of commands
+		stage.setOnCloseRequest(event -> {
+			if(connected) connection.leaveServer();
 
 		});
+
+		CharacterArrayList = new ArrayList<>(10); //List for every player
+		moveCharacter = false; //Selecting Character
+		tempSquare = null; //No square being moved ATM
+		initiateImages(); //Set image resources
 		
+	}
+
+	private void initiateImages(){
+
 	}
 
 	private void restart() {
@@ -107,29 +129,29 @@ public class Board extends Application {
 		public Square(int xloc, int yloc, int row, int column) {
 			this.xloc = xloc;
 			this.yloc = yloc;
-			
+
 			Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 			ImageView grass = new ImageView();
 			grass.setImage(grassImg);
-			
-			
+
+
 			Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 			ImageView path = new ImageView();
 			path.setImage(pathImg);
-			
-			
+
+
 			Image knightImg = new Image(getClass().getResource("pixelKnight.png").toExternalForm());
 			ImageView knight = new ImageView();
 			knight.setImage(knightImg);
-			
+
 			Image wizardImg = new Image(getClass().getResource("pixelWizard.png").toExternalForm());
 			ImageView wizard = new ImageView();
 			wizard.setImage(wizardImg);
-			
+
 			Image clericImg = new Image(getClass().getResource("pixelCleric.png").toExternalForm());
 			ImageView cleric = new ImageView();
 			cleric.setImage(clericImg);
-			
+
 			Image rogueImg = new Image(getClass().getResource("pixelRogue.png").toExternalForm());
 			ImageView rogue = new ImageView();
 			rogue.setImage(rogueImg);
@@ -141,19 +163,19 @@ public class Board extends Application {
 
 			grass.setFitWidth(99);
 			grass.setPreserveRatio(true);
-			
+
 			path.setFitWidth(99);
 			path.setPreserveRatio(true);
-			
+
 			knight.setFitWidth(99);
 			knight.setPreserveRatio(true);
-			
+
 			wizard.setFitWidth(99);
 			wizard.setPreserveRatio(true);
-			
+
 			cleric.setFitWidth(99);
 			cleric.setPreserveRatio(true);
-			
+
 			rogue.setFitWidth(99);
 			rogue.setPreserveRatio(true);
 			
@@ -169,24 +191,42 @@ public class Board extends Application {
 			if((column == 1 && row == 1) || (column == 1 && row == 8) || (column == 13 && row == 1) || (column == 13  && row == 8))
 			{
 				this.getChildren().add(knight);
+				c = new Fighter(new int[]{});
 			}
 			if((column == 7 && row == 1) || (column == 7 && row == 8))
 			{
 				this.getChildren().add(wizard);
+				c = new Wizard(new int[]{});
 			}
 			if((column == 4 && row == 1) || (column == 4 && row == 8))
 			{
 				this.getChildren().add(cleric);
+				c = new Cleric(new int[]{});
 			}
-			if((column == 10 && row == 1) || (column == 10 && row == 8))
-			{
+			if((column == 10 && row == 1) || (column == 10 && row == 8)) {
 				this.getChildren().add(rogue);
+				c = new Rogue(new int[]{});
+			}
+			if(c!=null){
+				//CharacterArrayList.add(new CharacterHandler(c,new Point(row,column)));
 			}
 		}
 
 		// Gets mouse event
 		public void mouseEvent() {
-			if(connected) connection.createX(xloc, yloc);
+			if(!moveCharacter){
+				if(c==null) return;
+				moveCharacter = true;
+				tempSquare = this;
+			}else{
+				if(c!=null){ //if this square is occupied
+					return;
+				}
+				connection.sendCharacterMove(tempSquare,this);
+				getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size()-1));
+				tempSquare.getChildren().remove(getChildren().get(getChildren().size()-1));
+				moveCharacter = false;
+			}
 		}
 
 		public void setState() {

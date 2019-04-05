@@ -231,8 +231,7 @@ public class Board extends Application {
 			for(Pair cords : yaMoves) {
 				if(box[cords.getY()][cords.getX()]==null)
 				{
-					box[cords.getY()][cords.getX()].getChildren().clear();
-					box[cords.getY()][cords.getX()].getChildren().add(movesTile);
+					box[cords.getY()][cords.getX()].setStyle("-fx-border-color: red;");
 				}
 			}
 		}

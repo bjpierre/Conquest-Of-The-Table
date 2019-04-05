@@ -230,6 +230,11 @@ public class MultiplayerHandler {
         return true;
     }
 
+    /**
+     * Receives and handles any multiplayer movement
+     * @param mess the recieved string message to handle
+     * @return false in the event of any errors
+     */
     public boolean recieveCharacterMove(String mess){
         Scanner sc = new Scanner(mess.replace("..", ""));
         sc.useDelimiter("-");

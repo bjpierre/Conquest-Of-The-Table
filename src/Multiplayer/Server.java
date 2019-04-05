@@ -9,7 +9,7 @@ import java.util.Vector;
 
 
 /**
- * 
+ * Handles multiplayer interactions
  * @author Ben Pierre
  *
  */
@@ -100,6 +100,13 @@ class Player implements Runnable {
 	Socket s;
 	Boolean stopped;
 
+	/**
+	 * Creates a player handler
+	 * @param s Socket the client connects from
+	 * @param id ID of the player
+	 * @param dis Input Stream
+	 * @param dos Output Stream
+	 */
 	public Player(Socket s, int id, DataInputStream dis, DataOutputStream dos) {
 		this.dis = dis;
 		this.dos = dos;
@@ -134,11 +141,16 @@ class Player implements Runnable {
 
 		}
 	}
-	
+	/**
+	 * Stops the server
+	 */
 	public void stop() {
 		stopped = true;
 	}
-	
+	/**
+	 * Gets the id of this player
+	 * @return The Id of the player
+	 */
 	public int getID() {
 		return id;
 	}

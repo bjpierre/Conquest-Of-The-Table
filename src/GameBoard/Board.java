@@ -84,6 +84,7 @@ public class Board extends Application {
 
 		
 	}
+	
 	/**
 	 * Rebuilds the board to the default state
 	 */
@@ -112,6 +113,10 @@ public class Board extends Application {
 
 	}
 
+	/**
+	 * Restarts the game
+	 * Accessible by multiplayer 
+	 */
 	public void restart() {
 		buildBoard();
 	}
@@ -207,7 +212,11 @@ public class Board extends Application {
 			}
 		}
 
-		// Gets mouse event
+		/**
+		 * Handles a mouse event
+		 * 
+		 * Currently decides whether to move a piece or not
+		 */
 		public void mouseEvent() {
 			if(!moveCharacter){
 				if(c==null) return;
@@ -220,6 +229,8 @@ public class Board extends Application {
 				if(connected)connection.sendCharacterMove(tempSquare,this);
 				getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size()-1));
 				tempSquare.getChildren().remove(getChildren().get(getChildren().size()-1));
+				c = tempSquare.getCharacter();
+				tempSquare.c = null;
 				moveCharacter = false;
 			}
 		}
@@ -227,15 +238,25 @@ public class Board extends Application {
 		public void setState() {
 
 		}
-
+		/**
+		 * Returns the x location 
+		 * @return the xLocation of the piece
+		 */
 		public int getX() {
 			return xloc;
 		}
 
+		/**
+		 * Returns the y location
+		 * @return the Y location of the piece
+		 */
 		public int getY() {
 			return yloc;
 		}
-		
+		/**
+		 * Fetches the character at this tile
+		 * @return the character stored here
+		 */
 		public BaseCharacter getCharacter() {
 			return c;
 		}

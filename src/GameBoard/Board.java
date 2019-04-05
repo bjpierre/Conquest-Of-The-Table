@@ -215,11 +215,9 @@ public class Board extends Application {
 			//BaseCharacter cCheck = getCharacter();
 			if(c==null)
 			{
-				return;
-			}
-			else {
-			HashSet<Pair> moves = CharacterAndBoardUtil.moveList(xloc, yloc, box);
-			whereYouCanGo(moves);
+				HashSet<Pair> moves = CharacterAndBoardUtil.moveList(xloc, yloc, box);
+				whereYouCanGo(moves);
+				
 			}
 		}
 		

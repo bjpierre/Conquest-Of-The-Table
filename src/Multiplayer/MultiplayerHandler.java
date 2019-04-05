@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import GameBoard.Board;
 import GameBoard.Board.Square;
+import javafx.application.Platform;
 
 /**
  * @author Ben Pierre
@@ -20,21 +21,24 @@ public class MultiplayerHandler {
     DataInputStream dis;
     DataOutputStream dos;
     int id;
-    Square[][] board;
-    Thread readMessage;
+    private Square[][] board;
+    private Thread readMessage;
+    private Board gameBoard;
 
     /**
      * Creates and handles a connection to a multiplayer server
      *
      * @param Address Server address
      * @param port    Port Game is hosted on
-     * @param board   Reference to the board
+     * @param board   Reference to the main game - Pretty bad code but hey
      * @throws IOException if connection fails
      */
-    public MultiplayerHandler(String Address, int port, Square[][] board) throws IOException {
+    public MultiplayerHandler(String Address, int port, Board board) throws IOException {
         ip = InetAddress.getByName(Address);
         socket = new Socket(ip, port);
-        this.board = board;
+        gameBoard = board;
+        this.board = gameBoard.box;
+
         run();
     }
 
@@ -48,6 +52,7 @@ public class MultiplayerHandler {
         socket = new Socket(ip, 4444);
         run();
     }
+    
 
     /**
      * Sets up streams
@@ -78,9 +83,19 @@ public class MultiplayerHandler {
                         } else if (msg.startsWith("CrX-")) {
                             setGridx(msg);
                         } else if (msg.startsWith("Restart")) {
-                            restart();
+                        	Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+		                        	System.out.println("Recieved Restart Que");
+		                        	gameBoard.restart();
+								}});
+
                         } else if(msg.startsWith("Move")){
-                            System.out.print("Move! " + msg);
+                        	Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									recieveCharacterMove(msg);
+								}});
                         }else{
                             System.out.println(msg);
                         }
@@ -197,15 +212,6 @@ public class MultiplayerHandler {
     }
 
     /**
-     * Sets the board to empty
-     *
-     * @return False if anything goes wrong
-     */
-    private boolean restart() {
-        System.out.println("Restarting");
-        return false;
-    }
-    /**
      * Example of how a method will look when the game is actually implemented
      *
      * @param from original square
@@ -214,7 +220,7 @@ public class MultiplayerHandler {
      */
     public boolean sendCharacterMove(Square from, Square to) {
         try {
-            sendMessage("Move-" + from.getX() + "-" + from.getY() + "-" + to.getX() + "-" + to.getY() + "..");
+            sendMessage("Move-" + (from.getX()) + "-" + (from.getY()) + "-" + (to.getX()) + "-" + (to.getY()) + "..");
         }catch (Exception e){
             System.out.println("Error moving Character");
             return false;
@@ -225,7 +231,7 @@ public class MultiplayerHandler {
     }
 
     public boolean recieveCharacterMove(String mess){
-        Scanner sc = new Scanner(mess);
+        Scanner sc = new Scanner(mess.replace("..", ""));
         sc.useDelimiter("-");
         sc.next();
         Square from = board[Integer.parseInt(sc.next())][Integer.parseInt(sc.next())];

@@ -219,6 +219,7 @@ public class Board extends Application {
 			}
 			else {
 			HashSet<Pair> moves = CharacterAndBoardUtil.moveList(xloc, yloc, box);
+			whereYouCanGo(moves);
 			}
 		}
 		
@@ -230,6 +231,7 @@ public class Board extends Application {
 			for(Pair cords : yaMoves) {
 				if(box[cords.getY()][cords.getX()]==null)
 				{
+					box[cords.getY()][cords.getX()].getChildren().clear();
 					box[cords.getY()][cords.getX()].getChildren().add(movesTile);
 				}
 			}

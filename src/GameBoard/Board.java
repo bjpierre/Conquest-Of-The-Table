@@ -110,49 +110,58 @@ public class Board extends Application {
 	public class Square extends StackPane {
 		private int xloc, yloc;
 		private BaseCharacter c;
+		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
+		private ImageView grass = new ImageView();
+		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
+		private ImageView path = new ImageView();
+		private Image knightImg = new Image(getClass().getResource("pixelKnight.png").toExternalForm());
+		private ImageView knight = new ImageView();
+		private Image wizardImg = new Image(getClass().getResource("pixelWizard.png").toExternalForm());
+		private ImageView wizard = new ImageView();
+		private Image clericImg = new Image(getClass().getResource("pixelCleric.png").toExternalForm());
+		private ImageView cleric = new ImageView();
+		private Image rogueImg = new Image(getClass().getResource("pixelRogue.png").toExternalForm());
+		private ImageView rogue = new ImageView();
+		private int grassPlace, pathPlace = 0;
 
 		// Used to create and update the board
 		public Square(int xloc, int yloc, int row, int column) {
 			this.xloc = xloc;
 			this.yloc = yloc;
 			
-			Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
-			ImageView grass = new ImageView();
+			
 			grass.setImage(grassImg);
+			grassPlace = 1;
 			
 			
-			Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
-			ImageView path = new ImageView();
+			
 			path.setImage(pathImg);
+			pathPlace =1;
 			
 			
-			Image knightImg = new Image(getClass().getResource("pixelKnight.png").toExternalForm());
-			ImageView knight = new ImageView();
+			
 			knight.setImage(knightImg);
 			
-			Image wizardImg = new Image(getClass().getResource("pixelWizard.png").toExternalForm());
-			ImageView wizard = new ImageView();
+			
 			wizard.setImage(wizardImg);
 			
-			Image clericImg = new Image(getClass().getResource("pixelCleric.png").toExternalForm());
-			ImageView cleric = new ImageView();
+			
 			cleric.setImage(clericImg);
 			
-			Image rogueImg = new Image(getClass().getResource("pixelRogue.png").toExternalForm());
-			ImageView rogue = new ImageView();
+			
 			rogue.setImage(rogueImg);
 			
-			Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
-			ImageView movesTile = new ImageView();
-			movesTile.setImage(movesTileImg);
+			//Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
+			//ImageView movesTile = new ImageView();
+			//movesTile.setImage(movesTileImg);
 			
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(100, 100);
 			this.setOnMouseClicked(e -> mouseEvent());
 			
-			movesTile.setFitWidth(99);
-			movesTile.setPreserveRatio(true);
+			//movesTile.setFitWidth(99);
+			//movesTile.setPreserveRatio(true);
 
 			grass.setFitWidth(99);
 			grass.setPreserveRatio(true);
@@ -218,25 +227,31 @@ public class Board extends Application {
 		};*/
 		public void mouseEvent() {
 			if(connected) connection.createX(xloc, yloc);
+			//boolean bool = true;
 			if(c != null)
 			{
 				HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(xloc, yloc, box);
-				whereYouCanGo(moves);
+				//whereYouCanGo(moves);
+				for(Pair cords : moves) {
+					
+						box[cords.getX()][cords.getY()].setStyle("-fx-border-color: yellow;");
+						//System.out.println("Congrats you clicked");
+				}
 			}
 		}
 		
-		private void whereYouCanGo(HashSet<Pair> yaMoves)
+		/*private void whereYouCanGo(HashSet<Pair> yaMoves)
 		{
 			//Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
 			//ImageView movesTile = new ImageView();
 			//movesTile.setImage(movesTileImg);
 			for(Pair cords : yaMoves) {
-				if(box[cords.getY()][cords.getX()]==null)
+				if(box[cords.getX()][cords.getY()]==null)
 				{
-					box[cords.getY()][cords.getX()].setStyle("-fx-border-color: red;");
+					box[cords.getX()][cords.getY()].setStyle("-fx-border-color: red;");
 				}
 			}
-		}
+		}*/
 
 		public void setState() {
 
@@ -253,5 +268,6 @@ public class Board extends Application {
 		public BaseCharacter getCharacter() {
 			return c;
 		}
+		
 	}
 }

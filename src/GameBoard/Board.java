@@ -4,7 +4,10 @@ import java.util.HashSet;
 
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
+import character.Cleric;
 import character.Fighter;
+import character.Rogue;
+import character.Wizard;
 import charutil.CharacterAndBoardUtil;
 import charutil.CharacterAndBoardUtil.Pair;
 import javafx.application.Application;
@@ -186,14 +189,17 @@ public class Board extends Application {
 			if((column == 7 && row == 1) || (column == 7 && row == 8))
 			{
 				this.getChildren().add(wizard);
+				c = new Wizard();
 			}
 			if((column == 4 && row == 1) || (column == 4 && row == 8))
 			{
 				this.getChildren().add(cleric);
+				c = new Cleric();
 			}
 			if((column == 10 && row == 1) || (column == 10 && row == 8))
 			{
 				this.getChildren().add(rogue);
+				c = new Rogue();
 			}
 		}
 
@@ -212,12 +218,10 @@ public class Board extends Application {
 		};*/
 		public void mouseEvent() {
 			if(connected) connection.createX(xloc, yloc);
-			//BaseCharacter cCheck = getCharacter();
-			if(c==null)
+			if(c != null)
 			{
 				HashSet<Pair> moves = CharacterAndBoardUtil.moveList(xloc, yloc, box);
 				whereYouCanGo(moves);
-				
 			}
 		}
 		

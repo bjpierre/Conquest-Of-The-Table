@@ -220,16 +220,16 @@ public class Board extends Application {
 			if(connected) connection.createX(xloc, yloc);
 			if(c != null)
 			{
-				HashSet<Pair> moves = CharacterAndBoardUtil.moveList(xloc, yloc, box);
+				HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(xloc, yloc, box);
 				whereYouCanGo(moves);
 			}
 		}
 		
 		private void whereYouCanGo(HashSet<Pair> yaMoves)
 		{
-			Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
-			ImageView movesTile = new ImageView();
-			movesTile.setImage(movesTileImg);
+			//Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
+			//ImageView movesTile = new ImageView();
+			//movesTile.setImage(movesTileImg);
 			for(Pair cords : yaMoves) {
 				if(box[cords.getY()][cords.getX()]==null)
 				{

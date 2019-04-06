@@ -91,6 +91,31 @@ public class CharacterAndBoardUtil {
 		return false;
 	}
 	
+	//This will be deleted
+	public static HashSet<Pair> tempMoveList(int x, int y, Square[][] board)
+	{
+		HashSet<Pair> moves = new HashSet<Pair>();
+	
+		if(x > 0)
+			moves.add(new Pair(x-1, y));
+		if(y > 0)
+			moves.add(new Pair(x, y-1));
+		if(y > 0 && x > 0)
+			moves.add(new Pair(x-1, y-1));
+		if(x < board[0].length-1 && y < board.length-1)
+			moves.add(new Pair(x+1, y+1));
+		if(x < board[0].length-1)
+			moves.add(new Pair(x+1, y));
+		if(y < board.length-1)
+			moves.add(new Pair(x, y+1));
+		if(x > 0 && y < board.length-1)
+			moves.add(new Pair(x-1, y+1));
+		if(x < board[0].length && y > 0)
+			moves.add(new Pair(x+1, y-1));
+		
+		return moves;
+	}
+	
 	public static HashSet<Pair> moveList(int x, int y, Square[][] board)
 	{
 		BaseCharacter c = board[x][y].getCharacter();
@@ -128,13 +153,4 @@ public class CharacterAndBoardUtil {
 		}
 		return moves;
 	}
-	/*public HashSet<Pair> showMoves(new EventHandler<MouseEvent>, Square[][] board){
-		int x = MouseEvent.MOUSE_CLICKED.getSceneX();
-		int y = MouseEvent.MOUSE_CLICKED.getSceneY();
-		return moveList(x,y,board);
-	}*/
-	
-	
-
-	
 }

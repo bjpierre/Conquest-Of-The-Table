@@ -1,5 +1,6 @@
 package GameBoard;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -48,11 +49,6 @@ public class Board extends Application {
 	 * Variable to keep track of whether the server is connected or not
 	 */
 	protected Boolean connected;
-
-	/**
-	 * List of all characters in the board
-	 */
-	protected ArrayList<CharacterHandler> CharacterArrayList;
 
 
 	public static void main(String[] args) {
@@ -121,8 +117,6 @@ public class Board extends Application {
 		
 		border.setRight(restart);
 		border.setCenter(game);
-		
-		CharacterArrayList = new ArrayList<>(10); //List for every player
 		moveCharacter = false; //Selecting Character
 		tempSquare = null; //No square being moved ATM
 
@@ -130,7 +124,7 @@ public class Board extends Application {
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
-		private BaseCharacter c;
+		private CharacterHandler c;
 		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
@@ -214,22 +208,22 @@ public class Board extends Application {
 			if((column == 1 && row == 1) || (column == 1 && row == 8) || (column == 13 && row == 1) || (column == 13  && row == 8))
 			{
 				this.getChildren().add(knight);
-				c = new Fighter();
+				c = new CharacterHandler(new Fighter(),new Point(row,column),row==1);
 			}
 			if((column == 7 && row == 1) || (column == 7 && row == 8))
 			{
 				this.getChildren().add(wizard);
-				c = new Wizard();
+				c = new CharacterHandler(new Wizard(),new Point(row,column),row==1);
 			}
 			if((column == 4 && row == 1) || (column == 4 && row == 8))
 			{
 				this.getChildren().add(cleric);
-				c = new Cleric();
+				c = new CharacterHandler(new Cleric(),new Point(row,column),row==1);
 			}
 			if((column == 10 && row == 1) || (column == 10 && row == 8))
 			{
 				this.getChildren().add(rogue);
-				c = new Rogue();
+				c = new CharacterHandler(new Rogue(),new Point(row,column),row==1);
 			}
 		}
 
@@ -287,6 +281,10 @@ public class Board extends Application {
 		}
 		
 		public BaseCharacter getCharacter() {
+			return c.getCharacter();
+		}
+		
+		public CharacterHandler getHandler() {
 			return c;
 		}
 		

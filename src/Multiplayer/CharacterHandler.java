@@ -11,14 +11,16 @@ import java.awt.*;
 public class CharacterHandler {
     private BaseCharacter character;
     private Point point;
+    private Boolean team;
     /**
      * Creates a character handler
      * @param character The character subclass to be stores
      * @param point the location of the character
      */
-    public CharacterHandler(BaseCharacter character, Point point){
+    public CharacterHandler(BaseCharacter character, Point point, Boolean Team){
         this.character = character;
         this.point = point;
+        setTeam(Team);
 
     }
 
@@ -69,4 +71,12 @@ public class CharacterHandler {
     public int getY() {
     	return (int)point.getY();
     }
+
+	public Boolean getTeam() {
+		return team;
+	}
+
+	public void setTeam(Boolean team) {
+		this.team = team;
+	}
 }

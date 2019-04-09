@@ -1,7 +1,9 @@
 package GameBoard;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
+import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
 import character.Cleric;
@@ -29,16 +31,29 @@ public class Board extends Application {
 	BorderPane border;
 
 	Button restart;
+
+	/**
+	 * Temp variable to track moving a unit
+	 */
+	protected Boolean moveCharacter;
+
+	protected Square tempSquare;
 	
 	/**
 	 * Connection to multi-player handler
 	 */
-	MultiplayerHandler connection;
+	protected MultiplayerHandler connection;
 	
 	/**
 	 * Variable to keep track of whether the server is connected or not
 	 */
-	Boolean connected;
+	protected Boolean connected;
+
+	/**
+	 * List of all characters in the board
+	 */
+	protected ArrayList<CharacterHandler> CharacterArrayList;
+
 
 	public static void main(String[] args) {
 		launch(args);
@@ -49,7 +64,7 @@ public class Board extends Application {
 		
 		//Connect to multi-player or set flag indicating no connection
 		try {
-			connection = new MultiplayerHandler("lcoalhost", 4444, box);
+			connection = new MultiplayerHandler("localhost", 5656, this);
 			connected = true;
 		}catch(Exception E) {
 			System.out.println("Unable to connect to server");
@@ -57,15 +72,40 @@ public class Board extends Application {
 		}
 
 		border = new BorderPane();
-		GridPane game = new GridPane();
 		Scene scene = new Scene(border, 1500, 1000);
 
 		restart = new Button("Restart Game");
 		restart.setPadding(new Insets(10, 10, 10, 10));
-		restart.setOnAction(e -> restart());
+		restart.setOnAction(e -> {if(connected) connection.sendRestart(); restart();});
 
+		buildBoard();
+		stage.setTitle("Temp");
+		stage.setScene(scene);
+		stage.show();
+		//Override on close process to add leaving server to list of commands
+		stage.setOnCloseRequest(event -> {
+			if(connected) connection.leaveServer();
+
+		});
+
+		
+	}
+
+	/**
+	 * Restarts the game
+	 * Accessible by multiplayer 
+	 */
+	public void restart() {
+		buildBoard();
+	}
+	
+
+	/**
+	 * Rebuilds the board to the default state
+	 */
+	private void buildBoard() {
+		GridPane game = new GridPane();		
 		int row, column;
-
 		for (row = 0; row < 10; row++) {
 			for (column = 0; column < 15; column++) {
 				if(column == 7)
@@ -78,33 +118,14 @@ public class Board extends Application {
 				}
 			}
 		}
+		
 		border.setRight(restart);
 		border.setCenter(game);
-
-		stage.setTitle("Temp");
-		stage.setScene(scene);
-		stage.show();
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			//Override on close process to add leaving server to list of commands
-			@Override
-			public void handle(WindowEvent event) {
-				if(connected) connection.leaveServer();
-
-			}
-
-		});
 		
-	}
+		CharacterArrayList = new ArrayList<>(10); //List for every player
+		moveCharacter = false; //Selecting Character
+		tempSquare = null; //No square being moved ATM
 
-	private void restart() {
-		if(connected) connection.sendRestart();
-		int row, column;
-
-		for (row = 0; row < 10; row++) {
-			for (column = 0; column < 15; column++) {
-				box[row][column].setState();
-			}
-		}
 	}
 
 	public class Square extends StackPane {
@@ -226,7 +247,7 @@ public class Board extends Application {
 			}
 		};*/
 		public void mouseEvent() {
-			if(connected) connection.createX(xloc, yloc);
+			if(connected) {};
 			//boolean bool = true;
 			if(c != null)
 			{

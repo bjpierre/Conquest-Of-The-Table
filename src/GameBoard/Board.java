@@ -127,14 +127,22 @@ public class Board extends Application {
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
-		private Image knightImg = new Image(getClass().getResource("pixelKnight.png").toExternalForm());
-		private ImageView knight = new ImageView();
-		private Image wizardImg = new Image(getClass().getResource("pixelWizard.png").toExternalForm());
-		private ImageView wizard = new ImageView();
-		private Image clericImg = new Image(getClass().getResource("pixelCleric.png").toExternalForm());
-		private ImageView cleric = new ImageView();
-		private Image rogueImg = new Image(getClass().getResource("pixelRogue.png").toExternalForm());
-		private ImageView rogue = new ImageView();
+		private Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
+		private ImageView knightRed = new ImageView();
+		private Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
+		private ImageView wizardRed = new ImageView();
+		private Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
+		private ImageView clericRed = new ImageView();
+		private Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
+		private ImageView rogueRed = new ImageView();
+		private Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
+		private ImageView knightBlue = new ImageView();
+		private Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
+		private ImageView wizardBlue = new ImageView();
+		private Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
+		private ImageView clericBlue = new ImageView();
+		private Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
+		private ImageView rogueBlue = new ImageView();
 		private int grassPlace, pathPlace = 0;
 
 		// Used to create and update the board
@@ -146,20 +154,33 @@ public class Board extends Application {
 			grassPlace = 1;
 
 			path.setImage(pathImg);
-			pathPlace = 1;
+			
+			pathPlace =1;
+			
+			
+			
+			knightRed.setImage(knightRedImg);
+			
+			
+			wizardRed.setImage(wizardRedImg);
+			
+			
+			clericRed.setImage(clericRedImg);
+			
+			
+			rogueRed.setImage(rogueRedImg);
+			
+			knightBlue.setImage(knightBlueImg);
+			
+			
+			wizardBlue.setImage(wizardBlueImg);
+			
+			
+			clericBlue.setImage(clericBlueImg);
+			
+			
+			rogueBlue.setImage(rogueBlueImg);
 
-			knight.setImage(knightImg);
-
-			wizard.setImage(wizardImg);
-
-			cleric.setImage(clericImg);
-
-			rogue.setImage(rogueImg);
-
-			// Image movesTileImg = new
-			// Image(getClass().getResource("white.jpg").toExternalForm());
-			// ImageView movesTile = new ImageView();
-			// movesTile.setImage(movesTileImg);
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
@@ -174,41 +195,82 @@ public class Board extends Application {
 
 			path.setFitWidth(99);
 			path.setPreserveRatio(true);
-
-			knight.setFitWidth(99);
-			knight.setPreserveRatio(true);
-
-			wizard.setFitWidth(99);
-			wizard.setPreserveRatio(true);
-
-			cleric.setFitWidth(99);
-			cleric.setPreserveRatio(true);
-
-			rogue.setFitWidth(99);
-			rogue.setPreserveRatio(true);
+			
+			knightRed.setFitWidth(99);
+			knightRed.setPreserveRatio(true);
+			
+			wizardRed.setFitWidth(99);
+			wizardRed.setPreserveRatio(true);
+			
+			clericRed.setFitWidth(99);
+			clericRed.setPreserveRatio(true);
+			
+			rogueRed.setFitWidth(99);
+			rogueRed.setPreserveRatio(true);
+			
+			knightBlue.setFitWidth(99);
+			knightBlue.setPreserveRatio(true);
+			
+			wizardBlue.setFitWidth(99);
+			wizardBlue.setPreserveRatio(true);
+			
+			clericBlue.setFitWidth(99);
+			clericBlue.setPreserveRatio(true);
+			
+			rogueBlue.setFitWidth(99);
+			rogueBlue.setPreserveRatio(true);
+			
 
 			if (column != 7) {
 				this.getChildren().add(grass);
 			} else {
 				this.getChildren().add(path);
 			}
+			
+			if((column == 1 && row == 1) || (column == 13 && row == 1))
+			{
+				this.getChildren().add(knightRed);
 
-			if ((column == 1 && row == 1) || (column == 1 && row == 8) || (column == 13 && row == 1)
-					|| (column == 13 && row == 8)) {
-				this.getChildren().add(knight);
 				c = new CharacterHandler(new Fighter(), new Point(row, column), row == 1);
 			}
-			if ((column == 7 && row == 1) || (column == 7 && row == 8)) {
-				this.getChildren().add(wizard);
+			if((column == 1 && row == 8) || (column == 13 && row == 8))
+			{
+				this.getChildren().add(knightBlue);
+				c = new CharacterHandler(new Fighter(), new Point(row, column), row ==1);
+			}
+			if(column == 7 && row == 1)
+			{
+				this.getChildren().add(wizardRed);
+
 				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
 			}
-			if ((column == 4 && row == 1) || (column == 4 && row == 8)) {
-				this.getChildren().add(cleric);
+			if(column == 7 && row == 8)
+			{
+				this.getChildren().add(wizardBlue);
+				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
+			}
+			if(column == 4 && row == 1)
+			{
+				this.getChildren().add(clericRed);
+
+				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
+
+			}
+			if(column == 4 && row == 8)
+			{
+				this.getChildren().add(clericBlue);
 				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
 			}
-			if ((column == 10 && row == 1) || (column == 10 && row == 8)) {
-				this.getChildren().add(rogue);
+			if(column == 10 && row == 1)
+			{
+				this.getChildren().add(rogueRed);
 				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
+			}
+			if(column == 10 && row == 8)
+			{
+				this.getChildren().add(rogueBlue);
+				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
+
 			}
 		}
 

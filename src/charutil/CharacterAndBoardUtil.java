@@ -153,4 +153,16 @@ public class CharacterAndBoardUtil {
 		}
 		return moves;
 	}
+	
+	/**
+	 * Temp method to handle attacking or defending
+	 * @param attacker the character to attack with
+	 * @param defender the character defending
+	 * @return true if the attacker has won
+	 */
+
+
+	public static boolean tempHandleCombat(BaseCharacter attacker, BaseCharacter defender) {
+		return (attacker.generateHP() + 2>defender.generateHP());
+	}
 }

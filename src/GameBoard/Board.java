@@ -37,7 +37,7 @@ public class Board extends Application {
 	 * Temp variable to track moving a unit
 	 */
 	protected Boolean moveCharacter;
-	
+
 	protected Square tempSquare;
 
 	/**
@@ -225,45 +225,68 @@ public class Board extends Application {
 		 */
 		public void mouseEvent() {
 			HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(getXloc(), getYloc(), box);
-			//if another character is moving and this is not a valid square
-//			if(c!= null && tempSquare!=null) {
-//				if(tempSquare.getHandler().getTeam()!=getHandler().getTeam() && Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <=1 && Math.abs(tempSquare.getHandler().getY() - this.getYloc())<=1) {
-//					System.out.println("Shit we better handle combat now");
-//				}
-//			}
-			 //If character not selected 
-			 if (c != null && !c.getClicked()) {
-				c.setClicked(true);
-				for (Pair cords : moves) {
-					box[cords.getX()][cords.getY()].setStyle("-fx-border-color: yellow;");
-					tempSquare = this;
-					
+			// if another character is moving and this is not a valid square
+			if (c != null && tempSquare != null && tempSquare.c != null) {
+				System.out.println("In first box");
+				if (tempSquare.getHandler().getTeam() != getHandler().getTeam()
+						&& Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
+						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) {
+					if (CharacterAndBoardUtil.tempHandleCombat(tempSquare.c.getCharacter(), c.getCharacter())) { // if
+																													// attacker
+																													// won
+						System.out.println("Attacker Won");
+						styleSquares(moves, "black");
+						getChildren().remove(getChildren().get(getChildren().size() - 1));
+						c = null;
+						if (connected)
+							connection.sendRemoveCharacter(this);
+
+					} else {
+						System.out.println("Defender won");
+						tempSquare.getChildren().remove(tempSquare.getChildren().get(getChildren().size() - 1));
+						styleSquares(
+								CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
+								"black");
+						tempSquare.c = null;
+						tempSquare = null;
+						if (connected)
+							connection.sendRemoveCharacter(tempSquare);
+
+					}
 				}
-				
-				//If character selected
+			}
+			// If character not selected
+			else if (c != null && !c.getClicked()) {
+				c.setClicked(true);
+				tempSquare = this;
+				styleSquares(moves, "yellow");
+
+				// If character selected
 			} else if (c != null && c.getClicked()) {
 				c.setClicked(false);
-				for (Pair cords : moves) {
-					box[cords.getX()][cords.getY()].setStyle("-fx-border-color: black;");
-					tempSquare = null;
-				}
-				
-				//if no character present and square clicked
-			}else if(c==null && tempSquare != null) {
-				if(Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <=1 && Math.abs(tempSquare.getHandler().getY() - this.getYloc())<=1) { //if in current range
-					for(Pair cords : CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box)) {
-						box[cords.getX()][cords.getY()].setStyle("-fx-border-color: black;");
-						setStyle("-fx-border-color: black;");
-					}
+				styleSquares(moves, "none");
+				tempSquare.c = null;
+				tempSquare = null;
+
+				// if no character present and square clicked
+			} else if (c == null && tempSquare != null) {
+				if (Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
+						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) { // if in current range
+					if (connected)
+						connection.sendCharacterMove(tempSquare, this);
+					styleSquares(CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
+							"black");
+					setStyle("-fx-border-color: black;");
 					this.c = tempSquare.c;
-					c.setPoint(new  Point(getXloc(),getYloc()));
-					getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size()-1));
-					tempSquare.getChildren().remove(getChildren().get(getChildren().size()-1));
+					c.setPoint(new Point(getXloc(), getYloc()));
+					getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size() - 1));
+					tempSquare.getChildren().remove(getChildren().get(getChildren().size() - 1));
 					c.setClicked(false);
+					tempSquare.c = null;
 					tempSquare = null;
 
 				}
-				
+
 			}
 		}
 
@@ -274,24 +297,10 @@ public class Board extends Application {
 		 * cords : yaMoves) { if(box[cords.getX()][cords.getY()]==null) {
 		 * box[cords.getX()][cords.getY()].setStyle("-fx-border-color: red;"); } } }
 		 */
-		
-		/**
-		 * Sets the style of grid saures
-		 * @param moves The places to set the color of
-		 * @param color the outline to use
-		 */
-		private void styleSquares(HashSet<Pair> moves, String color) {
-			for (Pair cords : moves) {
-				box[cords.getX()][cords.getY()].setStyle("-fx-border-color: " + color +"; ");
-				tempSquare = this;
-				
-			}
-		}
 
 		public void setState() {
 
 		}
-
 
 		public BaseCharacter getCharacter() {
 			return c.getCharacter();
@@ -315,6 +324,30 @@ public class Board extends Application {
 
 		public void setYloc(int yloc) {
 			this.yloc = yloc;
+		}
+
+		/**
+		 * removes the character object and sprite associated with this square
+		 */
+		public void removeCharacter() {
+			c = null;
+			getChildren().remove(getChildren().get(getChildren().size() - 1));
+
+		}
+
+	}
+
+	/**
+	 * Sets the style of grid saures
+	 * 
+	 * @param moves
+	 *            The places to set the color of
+	 * @param color
+	 *            the outline to use
+	 */
+	public void styleSquares(HashSet<Pair> moves, String color) {
+		for (Pair cords : moves) {
+			box[cords.getX()][cords.getY()].setStyle("-fx-border-color: " + color + "; ");
 		}
 
 	}

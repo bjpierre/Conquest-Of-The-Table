@@ -88,7 +88,7 @@ public abstract class BaseCharacter {
 		return ac;
 	}
 	
-	protected int generateHP()
+	public int generateHP()
 	{
 		return hpDice.roll();
 	}

@@ -102,13 +102,13 @@ public class CharacterAndBoardUtil {
 			moves.add(new Pair(x, y-1));
 		if(y > 0 && x > 0)
 			moves.add(new Pair(x-1, y-1));
-		if(x < board[0].length-1 && y < board.length-1)
+		if(x < board.length-1 && y < board[0].length-1)
 			moves.add(new Pair(x+1, y+1));
-		if(x < board[0].length-1)
+		if(x < board.length-1)
 			moves.add(new Pair(x+1, y));
 		if(y < board.length-1)
 			moves.add(new Pair(x, y+1));
-		if(x > 0 && y < board.length-1)
+		if(x > 0 && y < board[0].length-1)
 			moves.add(new Pair(x-1, y+1));
 		if(x < board[0].length && y > 0)
 			moves.add(new Pair(x+1, y-1));
@@ -152,5 +152,17 @@ public class CharacterAndBoardUtil {
 				
 		}
 		return moves;
+	}
+	
+	/**
+	 * Temp method to handle attacking or defending
+	 * @param attacker the character to attack with
+	 * @param defender the character defending
+	 * @return true if the attacker has won
+	 */
+
+
+	public static boolean tempHandleCombat(BaseCharacter attacker, BaseCharacter defender) {
+		return (attacker.generateHP() + 2>defender.generateHP());
 	}
 }

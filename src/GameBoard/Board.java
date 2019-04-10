@@ -1,7 +1,10 @@
 package GameBoard;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashSet;
 
+import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
 import character.Cleric;
@@ -29,16 +32,23 @@ public class Board extends Application {
 	BorderPane border;
 
 	Button restart;
-	
+
+	/**
+	 * Temp variable to track moving a unit
+	 */
+	protected Boolean moveCharacter;
+
+	protected Square tempSquare;
+
 	/**
 	 * Connection to multi-player handler
 	 */
-	MultiplayerHandler connection;
-	
+	protected MultiplayerHandler connection;
+
 	/**
 	 * Variable to keep track of whether the server is connected or not
 	 */
-	Boolean connected;
+	protected Boolean connected;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -46,70 +56,73 @@ public class Board extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		
-		//Connect to multi-player or set flag indicating no connection
+
+		// Connect to multi-player or set flag indicating no connection
 		try {
-			connection = new MultiplayerHandler("lcoalhost", 4444, box);
+			connection = new MultiplayerHandler("localhost", 5656, this);
 			connected = true;
-		}catch(Exception E) {
+		} catch (Exception E) {
 			System.out.println("Unable to connect to server");
 			connected = false;
 		}
 
 		border = new BorderPane();
-		GridPane game = new GridPane();
 		Scene scene = new Scene(border, 1500, 1000);
 
 		restart = new Button("Restart Game");
 		restart.setPadding(new Insets(10, 10, 10, 10));
-		restart.setOnAction(e -> restart());
+		restart.setOnAction(e -> {
+			if (connected)
+				connection.sendRestart();
+			restart();
+		});
 
-		int row, column;
-
-		for (row = 0; row < 10; row++) {
-			for (column = 0; column < 15; column++) {
-				if(column == 7)
-				{
-					game.add(box[row][column] = new Square(row, column, row, column), column, row);
-				}
-				else
-				{
-					game.add(box[row][column] = new Square(row, column, row, column), column, row);
-				}
-			}
-		}
-		border.setRight(restart);
-		border.setCenter(game);
-
+		buildBoard();
 		stage.setTitle("Temp");
 		stage.setScene(scene);
 		stage.show();
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			//Override on close process to add leaving server to list of commands
-			@Override
-			public void handle(WindowEvent event) {
-				if(connected) connection.leaveServer();
-
-			}
+		// Override on close process to add leaving server to list of commands
+		stage.setOnCloseRequest(event -> {
+			if (connected)
+				connection.leaveServer();
 
 		});
-		
+
 	}
 
-	private void restart() {
-		if(connected) connection.sendRestart();
-		int row, column;
+	/**
+	 * Restarts the game Accessible by multiplayer
+	 */
+	public void restart() {
+		buildBoard();
+	}
 
+	/**
+	 * Rebuilds the board to the default state
+	 */
+	private void buildBoard() {
+		GridPane game = new GridPane();
+		int row, column;
 		for (row = 0; row < 10; row++) {
 			for (column = 0; column < 15; column++) {
-				box[row][column].setState();
+				if (column == 7) {
+					game.add(box[row][column] = new Square(row, column, row, column), column, row);
+				} else {
+					game.add(box[row][column] = new Square(row, column, row, column), column, row);
+				}
 			}
 		}
+
+		border.setRight(restart);
+		border.setCenter(game);
+		moveCharacter = false; // Selecting Character
+		tempSquare = null; // No square being moved ATM
+
 	}
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
-		private BaseCharacter c;
+		private CharacterHandler c;
 		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
@@ -134,16 +147,14 @@ public class Board extends Application {
 
 		// Used to create and update the board
 		public Square(int xloc, int yloc, int row, int column) {
-			this.xloc = xloc;
-			this.yloc = yloc;
-			
-			
+			this.setXloc(xloc);
+			this.setYloc(yloc);
+
 			grass.setImage(grassImg);
 			grassPlace = 1;
-			
-			
-			
+
 			path.setImage(pathImg);
+			
 			pathPlace =1;
 			
 			
@@ -169,18 +180,19 @@ public class Board extends Application {
 			
 			
 			rogueBlue.setImage(rogueBlueImg);
-			
+
+
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(100, 100);
 			this.setOnMouseClicked(e -> mouseEvent());
-			
-			//movesTile.setFitWidth(99);
-			//movesTile.setPreserveRatio(true);
+
+			// movesTile.setFitWidth(99);
+			// movesTile.setPreserveRatio(true);
 
 			grass.setFitWidth(99);
 			grass.setPreserveRatio(true);
-			
+
 			path.setFitWidth(99);
 			path.setPreserveRatio(true);
 			
@@ -208,113 +220,197 @@ public class Board extends Application {
 			rogueBlue.setFitWidth(99);
 			rogueBlue.setPreserveRatio(true);
 			
-			if(column != 7)
-			{
+
+			if (column != 7) {
 				this.getChildren().add(grass);
-			}
-			else
-			{
+			} else {
 				this.getChildren().add(path);
 			}
 			
 			if((column == 1 && row == 1) || (column == 13 && row == 1))
 			{
 				this.getChildren().add(knightRed);
-				c = new Fighter();
+
+				c = new CharacterHandler(new Fighter(), new Point(row, column), row == 1);
 			}
 			if((column == 1 && row == 8) || (column == 13 && row == 8))
 			{
 				this.getChildren().add(knightBlue);
-				c = new Fighter();
+				c = new CharacterHandler(new Fighter(), new Point(row, column), row ==1);
 			}
 			if(column == 7 && row == 1)
 			{
 				this.getChildren().add(wizardRed);
-				c = new Wizard();
+
+				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
 			}
 			if(column == 7 && row == 8)
 			{
 				this.getChildren().add(wizardBlue);
-				c = new Wizard();
+				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
 			}
 			if(column == 4 && row == 1)
 			{
 				this.getChildren().add(clericRed);
-				c = new Cleric();
+
+				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
+
 			}
 			if(column == 4 && row == 8)
 			{
 				this.getChildren().add(clericBlue);
-				c = new Cleric();
+				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
 			}
 			if(column == 10 && row == 1)
 			{
 				this.getChildren().add(rogueRed);
-				c = new Rogue();
+				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
 			}
 			if(column == 10 && row == 8)
 			{
 				this.getChildren().add(rogueBlue);
-				c = new Rogue();
+				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
+
 			}
 		}
 
 		// Gets mouse event
-		/*EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				EventType<MouseEvent> NULL = null;
-				if(MouseEvent.MOUSE_CLICKED!=NULL)
-				{
-					int x = MouseEvent.MOUSE_CLICKED.getSceneX();
-					int y = MouseEvent.MOUSE_CLICKED.getSceneY();
-				}
-				
-				
-			}
-		};*/
+		/*
+		 * EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+		 * public void handle(MouseEvent e) { EventType<MouseEvent> NULL = null;
+		 * if(MouseEvent.MOUSE_CLICKED!=NULL) { int x =
+		 * MouseEvent.MOUSE_CLICKED.getSceneX(); int y =
+		 * MouseEvent.MOUSE_CLICKED.getSceneY(); }
+		 * 
+		 * 
+		 * } };
+		 */
 		public void mouseEvent() {
-			if(connected) connection.createX(xloc, yloc);
-			//boolean bool = true;
-			if(c != null)
-			{
-				HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(xloc, yloc, box);
-				//whereYouCanGo(moves);
-				for(Pair cords : moves) {
-					
-						box[cords.getX()][cords.getY()].setStyle("-fx-border-color: yellow;");
-						//System.out.println("Congrats you clicked");
+			HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(getXloc(), getYloc(), box);
+			// if another character is moving and this is not a valid square
+			if (c != null && tempSquare != null && tempSquare.c != null) {
+				System.out.println("In first box");
+				if (tempSquare.getHandler().getTeam() != getHandler().getTeam()
+						&& Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
+						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) {
+					if (CharacterAndBoardUtil.tempHandleCombat(tempSquare.c.getCharacter(), c.getCharacter())) { // if
+																													// attacker
+																													// won
+						System.out.println("Attacker Won");
+						styleSquares(moves, "black");
+						getChildren().remove(getChildren().get(getChildren().size() - 1));
+						c = null;
+						if (connected)
+							connection.sendRemoveCharacter(this);
+
+					} else {
+						System.out.println("Defender won");
+						tempSquare.getChildren().remove(tempSquare.getChildren().get(getChildren().size() - 1));
+						styleSquares(
+								CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
+								"black");
+						tempSquare.c = null;
+						tempSquare = null;
+						if (connected)
+							connection.sendRemoveCharacter(tempSquare);
+
+					}
 				}
+			}
+			// If character not selected
+			else if (c != null && !c.getClicked()) {
+				c.setClicked(true);
+				tempSquare = this;
+				styleSquares(moves, "yellow");
+
+				// If character selected
+			} else if (c != null && c.getClicked()) {
+				c.setClicked(false);
+				styleSquares(moves, "none");
+				tempSquare.c = null;
+				tempSquare = null;
+
+				// if no character present and square clicked
+			} else if (c == null && tempSquare != null) {
+				if (Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
+						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) { // if in current range
+					if (connected)
+						connection.sendCharacterMove(tempSquare, this);
+					styleSquares(CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
+							"black");
+					setStyle("-fx-border-color: black;");
+					this.c = tempSquare.c;
+					c.setPoint(new Point(getXloc(), getYloc()));
+					getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size() - 1));
+					tempSquare.getChildren().remove(getChildren().get(getChildren().size() - 1));
+					c.setClicked(false);
+					tempSquare.c = null;
+					tempSquare = null;
+
+				}
+
 			}
 		}
-		
-		/*private void whereYouCanGo(HashSet<Pair> yaMoves)
-		{
-			//Image movesTileImg = new Image(getClass().getResource("white.jpg").toExternalForm());
-			//ImageView movesTile = new ImageView();
-			//movesTile.setImage(movesTileImg);
-			for(Pair cords : yaMoves) {
-				if(box[cords.getX()][cords.getY()]==null)
-				{
-					box[cords.getX()][cords.getY()].setStyle("-fx-border-color: red;");
-				}
-			}
-		}*/
+
+		/*
+		 * private void whereYouCanGo(HashSet<Pair> yaMoves) { //Image movesTileImg =
+		 * new Image(getClass().getResource("white.jpg").toExternalForm()); //ImageView
+		 * movesTile = new ImageView(); //movesTile.setImage(movesTileImg); for(Pair
+		 * cords : yaMoves) { if(box[cords.getX()][cords.getY()]==null) {
+		 * box[cords.getX()][cords.getY()].setStyle("-fx-border-color: red;"); } } }
+		 */
 
 		public void setState() {
 
 		}
 
-		public int getX() {
+		public BaseCharacter getCharacter() {
+			return c.getCharacter();
+		}
+
+		public CharacterHandler getHandler() {
+			return c;
+		}
+
+		public int getXloc() {
 			return xloc;
 		}
 
-		public int getY() {
+		public void setXloc(int xloc) {
+			this.xloc = xloc;
+		}
+
+		public int getYloc() {
 			return yloc;
 		}
-		
-		public BaseCharacter getCharacter() {
-			return c;
+
+		public void setYloc(int yloc) {
+			this.yloc = yloc;
 		}
-		
+
+		/**
+		 * removes the character object and sprite associated with this square
+		 */
+		public void removeCharacter() {
+			c = null;
+			getChildren().remove(getChildren().get(getChildren().size() - 1));
+
+		}
+
+	}
+
+	/**
+	 * Sets the style of grid saures
+	 * 
+	 * @param moves
+	 *            The places to set the color of
+	 * @param color
+	 *            the outline to use
+	 */
+	public void styleSquares(HashSet<Pair> moves, String color) {
+		for (Pair cords : moves) {
+			box[cords.getX()][cords.getY()].setStyle("-fx-border-color: " + color + "; ");
+		}
+
 	}
 }

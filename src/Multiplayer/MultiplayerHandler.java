@@ -220,7 +220,7 @@ public class MultiplayerHandler {
      */
     public boolean sendCharacterMove(Square from, Square to) {
         try {
-            sendMessage("Move-" + (from.getX()) + "-" + (from.getY()) + "-" + (to.getX()) + "-" + (to.getY()) + "..");
+            sendMessage("Move-" + (from.getXloc()) + "-" + (from.getYloc()) + "-" + (to.getXloc()) + "-" + (to.getYloc()) + "..");
         }catch (Exception e){
             System.out.println("Error moving Character");
             return false;

@@ -139,8 +139,8 @@ public class Board extends Application {
 
 		// Used to create and update the board
 		public Square(int xloc, int yloc, int row, int column) {
-			this.xloc = xloc;
-			this.yloc = yloc;
+			this.setXloc(xloc);
+			this.setYloc(yloc);
 
 			grass.setImage(grassImg);
 			grassPlace = 1;
@@ -224,10 +224,15 @@ public class Board extends Application {
 		 * } };
 		 */
 		public void mouseEvent() {
-			HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(xloc, yloc, box);
-			
+			HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(getXloc(), getYloc(), box);
+			//if another character is moving and this is not a valid square
+//			if(c!= null && tempSquare!=null) {
+//				if(tempSquare.getHandler().getTeam()!=getHandler().getTeam() && Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <=1 && Math.abs(tempSquare.getHandler().getY() - this.getYloc())<=1) {
+//					System.out.println("Shit we better handle combat now");
+//				}
+//			}
 			 //If character not selected 
-			if (c != null && !c.getClicked()) {
+			 if (c != null && !c.getClicked()) {
 				c.setClicked(true);
 				for (Pair cords : moves) {
 					box[cords.getX()][cords.getY()].setStyle("-fx-border-color: yellow;");
@@ -245,19 +250,18 @@ public class Board extends Application {
 				
 				//if no character present and square clicked
 			}else if(c==null && tempSquare != null) {
-				if(Math.abs(tempSquare.getHandler().getX() - this.getX()) <=1 && Math.abs(tempSquare.getHandler().getY() - this.getY())<=1) { //if in current range
-					for(Pair cords : CharacterAndBoardUtil.tempMoveList(tempSquare.getX(), tempSquare.getX(), box)) {
+				if(Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <=1 && Math.abs(tempSquare.getHandler().getY() - this.getYloc())<=1) { //if in current range
+					for(Pair cords : CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box)) {
 						box[cords.getX()][cords.getY()].setStyle("-fx-border-color: black;");
+						setStyle("-fx-border-color: black;");
 					}
-					
 					this.c = tempSquare.c;
-					tempSquare.c = null;
-					c.setPoint(new  Point(xloc,yloc));
+					c.setPoint(new  Point(getXloc(),getYloc()));
 					getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size()-1));
 					tempSquare.getChildren().remove(getChildren().get(getChildren().size()-1));
 					c.setClicked(false);
+					tempSquare = null;
 
-					System.out.println("Moved from : "+ tempSquare.getX() + ", " + tempSquare.getY() + " to " + getX() + ", " + getY());
 				}
 				
 			}
@@ -270,18 +274,24 @@ public class Board extends Application {
 		 * cords : yaMoves) { if(box[cords.getX()][cords.getY()]==null) {
 		 * box[cords.getX()][cords.getY()].setStyle("-fx-border-color: red;"); } } }
 		 */
+		
+		/**
+		 * Sets the style of grid saures
+		 * @param moves The places to set the color of
+		 * @param color the outline to use
+		 */
+		private void styleSquares(HashSet<Pair> moves, String color) {
+			for (Pair cords : moves) {
+				box[cords.getX()][cords.getY()].setStyle("-fx-border-color: " + color +"; ");
+				tempSquare = this;
+				
+			}
+		}
 
 		public void setState() {
 
 		}
 
-		public int getX() {
-			return xloc;
-		}
-
-		public int getY() {
-			return yloc;
-		}
 
 		public BaseCharacter getCharacter() {
 			return c.getCharacter();
@@ -289,6 +299,22 @@ public class Board extends Application {
 
 		public CharacterHandler getHandler() {
 			return c;
+		}
+
+		public int getXloc() {
+			return xloc;
+		}
+
+		public void setXloc(int xloc) {
+			this.xloc = xloc;
+		}
+
+		public int getYloc() {
+			return yloc;
+		}
+
+		public void setYloc(int yloc) {
+			this.yloc = yloc;
 		}
 
 	}

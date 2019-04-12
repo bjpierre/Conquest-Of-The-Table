@@ -63,7 +63,7 @@ public class CharacterHandler {
      * @return X location
      */
     public int getX() {
-    	return (int)point.getX();
+    	return point!=null ? (int)point.getX() : -1;
     }
     
     /**
@@ -71,7 +71,7 @@ public class CharacterHandler {
      * @return Y location
      */
     public int getY() {
-    	return (int)point.getY();
+    	return point!=null ? (int)point.getY() : -1;
     }
 
 	public Boolean getTeam() {

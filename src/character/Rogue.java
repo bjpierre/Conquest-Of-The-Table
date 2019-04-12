@@ -13,6 +13,7 @@ public class Rogue extends BaseCharacter {
 	{
 		super(8, rand);
 		sneakAtkDice = new Dice(6, rand);
+		sneakAtkNum = 1;
 	}
 	
 	public Rogue()

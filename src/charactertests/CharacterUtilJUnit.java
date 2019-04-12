@@ -102,7 +102,7 @@ public class CharacterUtilJUnit {
 	{
 		Random rand = new Random(1);
 		Fighter f = new Fighter(rand);
-		assertEquals(9, f.getHP());
+		assertEquals(6, f.getHP());
 		assertEquals(-1, f.useSpecialAbility());
 		assertEquals("Extra Attack", f.specialAbilityName());
 	}

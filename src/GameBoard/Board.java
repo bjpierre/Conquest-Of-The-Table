@@ -285,7 +285,7 @@ public class Board extends Application {
 
 			}
 			
-			if(c!=null) turnHandler.add(c);
+			if(c!=null) turnHandler.addCharacter(c);
 		}
 
 		/**
@@ -426,11 +426,19 @@ public class Board extends Application {
 			
 		}
 		
-		public void add(CharacterHandler character) {
+		/**
+		 * adds a character to the que
+		 * @param character
+		 */
+		public void addCharacter(CharacterHandler character) {
 			characterList.enqueue(character);
 			size++;
 		}
 		
+		/**
+		 * returns the next character in the list
+		 * @return the next character, null if at end of que;
+		 */
 		public CharacterHandler getNextCharacter() {
 			if(loc > size) return null;
 			loc++;
@@ -447,28 +455,46 @@ public class Board extends Application {
 			
 		}
 		
-		public void resetLoc() {
+		/**
+		 * restacks the que;
+		 */
+		public void restackQue() {
 			loc = 0;
 		}
 		
+		/**
+		 * Are we at the end of a loop?
+		 * @return resetLoc() not needed if true
+		 */
 		public boolean hasNextCharacter() {
 			return loc<size;
 		}
 		
+		/**
+		 * sets the team
+		 * @param team true for team one, false for team two
+		 */
 		public void setTeam(Boolean team) {
 			this.team = team;
 		}
 		
+		/**
+		 * Returns team in play
+		 * @return true for team one, false for team two
+		 */
 		public Boolean getTeam() {
 			return team;
 		}
 		
+		/**
+		 * demo method to prove a it works
+		 */
 		public void loopTest() {
 			while (hasNextCharacter()) {
 				System.out.println(getNextCharacter());
 			}
 			System.out.println("Toggling");
-			resetLoc();
+			restackQue();
 			while (hasNextCharacter()) {
 				System.out.println(getNextCharacter());
 			}

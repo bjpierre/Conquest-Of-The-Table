@@ -106,7 +106,7 @@ public class CharacterAndBoardUtil {
 			moves.add(new Pair(x+1, y+1));
 		if(x < board.length-1)
 			moves.add(new Pair(x+1, y));
-		if(y < board.length-1)
+		if(y < board[0].length-1)
 			moves.add(new Pair(x, y+1));
 		if(x > 0 && y < board[0].length-1)
 			moves.add(new Pair(x-1, y+1));

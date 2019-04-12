@@ -57,14 +57,7 @@ public class Board extends Application {
 	@Override
 	public void start(Stage stage) {
 
-		// Connect to multi-player or set flag indicating no connection
-		try {
-			connection = new MultiplayerHandler("localhost", 5656, this);
-			connected = true;
-		} catch (Exception E) {
-			System.out.println("Unable to connect to server");
-			connected = false;
-		}
+		connected = bootMultiplayer();
 
 		border = new BorderPane();
 		Scene scene = new Scene(border, 1500, 1000);
@@ -120,6 +113,21 @@ public class Board extends Application {
 
 	}
 
+	/**
+	 * launches a multiplayer connectoin to the server host
+	 * 
+	 * @return status of the connection, false if aborted, true if successful
+	 */
+	private boolean bootMultiplayer() {
+		try {
+			connection = new MultiplayerHandler("localhost", 5656, this);
+			return true;
+		} catch (Exception E) {
+			System.out.println("Unable to connect to server");
+			return false;
+		}
+	}
+
 	public class Square extends StackPane {
 		private int xloc, yloc;
 		private CharacterHandler c;
@@ -154,33 +162,24 @@ public class Board extends Application {
 			grassPlace = 1;
 
 			path.setImage(pathImg);
-			
-			pathPlace =1;
-			
-			
-			
-			knightRed.setImage(knightRedImg);
-			
-			
-			wizardRed.setImage(wizardRedImg);
-			
-			
-			clericRed.setImage(clericRedImg);
-			
-			
-			rogueRed.setImage(rogueRedImg);
-			
-			knightBlue.setImage(knightBlueImg);
-			
-			
-			wizardBlue.setImage(wizardBlueImg);
-			
-			
-			clericBlue.setImage(clericBlueImg);
-			
-			
-			rogueBlue.setImage(rogueBlueImg);
 
+			pathPlace = 1;
+
+			knightRed.setImage(knightRedImg);
+
+			wizardRed.setImage(wizardRedImg);
+
+			clericRed.setImage(clericRedImg);
+
+			rogueRed.setImage(rogueRedImg);
+
+			knightBlue.setImage(knightBlueImg);
+
+			wizardBlue.setImage(wizardBlueImg);
+
+			clericBlue.setImage(clericBlueImg);
+
+			rogueBlue.setImage(rogueBlueImg);
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
@@ -195,124 +194,119 @@ public class Board extends Application {
 
 			path.setFitWidth(99);
 			path.setPreserveRatio(true);
-			
+
 			knightRed.setFitWidth(99);
 			knightRed.setPreserveRatio(true);
-			
+
 			wizardRed.setFitWidth(99);
 			wizardRed.setPreserveRatio(true);
-			
+
 			clericRed.setFitWidth(99);
 			clericRed.setPreserveRatio(true);
-			
+
 			rogueRed.setFitWidth(99);
 			rogueRed.setPreserveRatio(true);
-			
+
 			knightBlue.setFitWidth(99);
 			knightBlue.setPreserveRatio(true);
-			
+
 			wizardBlue.setFitWidth(99);
 			wizardBlue.setPreserveRatio(true);
-			
+
 			clericBlue.setFitWidth(99);
 			clericBlue.setPreserveRatio(true);
-			
+
 			rogueBlue.setFitWidth(99);
 			rogueBlue.setPreserveRatio(true);
-			
 
 			if (column != 7) {
 				this.getChildren().add(grass);
 			} else {
 				this.getChildren().add(path);
 			}
-			
-			if((column == 1 && row == 1) || (column == 13 && row == 1))
-			{
+
+			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
 				this.getChildren().add(knightRed);
 
 				c = new CharacterHandler(new Fighter(), new Point(row, column), row == 1);
 			}
-			if((column == 1 && row == 8) || (column == 13 && row == 8))
-			{
+			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
 				this.getChildren().add(knightBlue);
-				c = new CharacterHandler(new Fighter(), new Point(row, column), row ==1);
+				c = new CharacterHandler(new Fighter(), new Point(row, column), row == 1);
 			}
-			if(column == 7 && row == 1)
-			{
+			if (column == 7 && row == 1) {
 				this.getChildren().add(wizardRed);
 
 				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
 			}
-			if(column == 7 && row == 8)
-			{
+			if (column == 7 && row == 8) {
 				this.getChildren().add(wizardBlue);
 				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
 			}
-			if(column == 4 && row == 1)
-			{
+			if (column == 4 && row == 1) {
 				this.getChildren().add(clericRed);
 
 				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
 
 			}
-			if(column == 4 && row == 8)
-			{
+			if (column == 4 && row == 8) {
 				this.getChildren().add(clericBlue);
 				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
 			}
-			if(column == 10 && row == 1)
-			{
+			if (column == 10 && row == 1) {
 				this.getChildren().add(rogueRed);
 				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
 			}
-			if(column == 10 && row == 8)
-			{
+			if (column == 10 && row == 8) {
 				this.getChildren().add(rogueBlue);
 				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
 
 			}
 		}
 
-		// Gets mouse event
-		/*
-		 * EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-		 * public void handle(MouseEvent e) { EventType<MouseEvent> NULL = null;
-		 * if(MouseEvent.MOUSE_CLICKED!=NULL) { int x =
-		 * MouseEvent.MOUSE_CLICKED.getSceneX(); int y =
-		 * MouseEvent.MOUSE_CLICKED.getSceneY(); }
-		 * 
-		 * 
-		 * } };
+		
+		/**
+		 * Handles the mouse event generated by clicking this tile
 		 */
 		public void mouseEvent() {
 			HashSet<Pair> moves = CharacterAndBoardUtil.tempMoveList(getXloc(), getYloc(), box);
-			// if another character is moving and this is not a valid square
+
+			// if this square occupied
 			if (c != null && tempSquare != null && tempSquare.c != null) {
-				System.out.println("In first box");
-				if (tempSquare.getHandler().getTeam() != getHandler().getTeam()
+
+				// If this square is the last square
+				if (this.equals(tempSquare)) {
+					c.setClicked(false);
+					styleSquares(moves, "black");
+					tempSquare = null;
+					
+					// if combat needs to happen
+				} else if (tempSquare.getHandler().getTeam() != getHandler().getTeam()
 						&& Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
 						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) {
-					if (CharacterAndBoardUtil.tempHandleCombat(tempSquare.c.getCharacter(), c.getCharacter())) { // if
-																													// attacker
-																													// won
-						System.out.println("Attacker Won");
+
+					// if attacker won
+					if (CharacterAndBoardUtil.tempHandleCombat(tempSquare.c.getCharacter(), c.getCharacter())) {
 						styleSquares(moves, "black");
-						getChildren().remove(getChildren().get(getChildren().size() - 1));
+						removeCharacter();
+						tempSquare.getHandler().setClicked(false);
+						styleSquares(
+								CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
+								"black");
 						c = null;
 						if (connected)
 							connection.sendRemoveCharacter(this);
 
+						// defender won
 					} else {
-						System.out.println("Defender won");
-						tempSquare.getChildren().remove(tempSquare.getChildren().get(getChildren().size() - 1));
+						tempSquare.removeCharacter();
 						styleSquares(
 								CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
 								"black");
 						tempSquare.c = null;
-						tempSquare = null;
 						if (connected)
 							connection.sendRemoveCharacter(tempSquare);
+						tempSquare = null;
 
 					}
 				}
@@ -322,13 +316,6 @@ public class Board extends Application {
 				c.setClicked(true);
 				tempSquare = this;
 				styleSquares(moves, "yellow");
-
-				// If character selected
-			} else if (c != null && c.getClicked()) {
-				c.setClicked(false);
-				styleSquares(moves, "none");
-				tempSquare.c = null;
-				tempSquare = null;
 
 				// if no character present and square clicked
 			} else if (c == null && tempSquare != null) {

@@ -1,16 +1,18 @@
 package character;
 
+import java.util.Random;
+
 import charutil.AbilityScore;
 import charutil.Dice;
 import item.ArcaneFocus;
 import item.Item;
 import item.Weapon;
 
-public abstract class BaseCharacter {
+public class BaseCharacter {
 
 	protected final int NUM_OF_STATS = 6;
 	protected Dice d20;
-	protected static final int[] BASE_ARRAY = {10, 10, 10, 10, 10, 10};
+	public static final int[] BASE_ARRAY = {10, 10, 10, 10, 10, 10};
 	
 	protected int[] stats = new int[NUM_OF_STATS];
 	protected int[] mods = new int[NUM_OF_STATS];
@@ -23,6 +25,14 @@ public abstract class BaseCharacter {
 	private int ac;
 	private int usesOfSpecial;
 	private int rangeOfSpecial;
+	
+	public BaseCharacter(int hpDiceSides, Random r)
+	{
+		this(hpDiceSides, 1);
+		d20 = new Dice(20, r);
+		hpDice = new Dice(hpDiceSides, r);
+		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
+	}
 	
 	protected BaseCharacter(int hpDiceSides, int SpecialRange)
 	{
@@ -93,6 +103,11 @@ public abstract class BaseCharacter {
 		return hpDice.roll();
 	}
 	
+	public int getHP()
+	{
+		return hp;
+	}
+	
 	public boolean canUseSpecialAbility()
 	{
 		return (usesOfSpecial > 0);
@@ -100,7 +115,7 @@ public abstract class BaseCharacter {
 	
 	public int useSpecialAbility()
 	{
-		return usesOfSpecial--;
+		return --usesOfSpecial;
 	}
 	
 	public int rangeOfSpecial()
@@ -142,5 +157,8 @@ public abstract class BaseCharacter {
 		return true;
 	}
 	
-	public abstract String specialAbilityName();
+	public String specialAbilityName()
+	{
+		return "NONE";
+	}
 }

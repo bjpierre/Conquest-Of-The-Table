@@ -30,6 +30,8 @@ public class BaseCharacter {
 	{
 		this(hpDiceSides, 1);
 		d20 = new Dice(20, r);
+		hpDice = new Dice(hpDiceSides, r);
+		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
 	}
 	
 	protected BaseCharacter(int hpDiceSides, int SpecialRange)
@@ -101,6 +103,11 @@ public class BaseCharacter {
 		return hpDice.roll();
 	}
 	
+	public int getHP()
+	{
+		return hp;
+	}
+	
 	public boolean canUseSpecialAbility()
 	{
 		return (usesOfSpecial > 0);
@@ -108,7 +115,7 @@ public class BaseCharacter {
 	
 	public int useSpecialAbility()
 	{
-		return usesOfSpecial--;
+		return --usesOfSpecial;
 	}
 	
 	public int rangeOfSpecial()

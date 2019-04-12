@@ -1,6 +1,7 @@
 package charactertests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
@@ -62,9 +63,24 @@ public class CharacterUtilJUnit {
 	}
 	
 	@Test
-	public void BaseCharacterTests()
+	public void BaseCharacterGetterTests()
 	{
-		Random rand = new Random();
+		Random rand = new Random(1);
 		BaseCharacter bc = new BaseCharacter(6, rand);
+		assertEquals(4, bc.getHP());
+		assertEquals(6, bc.getMove());
+		assertEquals(10, bc.getAC());
+		assertTrue(bc.canUseSpecialAbility());
+		assertEquals(0, bc.useSpecialAbility());
+		assertEquals(1, bc.rangeOfSpecial());
+		int hp = bc.getHP();
+		bc.takeDamage(1);
+		assertEquals(hp-1, bc.getHP());
+		assertEquals("NONE", bc.specialAbilityName());
+		
+		assertEquals(-1, bc.attack());
+		assertEquals(-1, bc.weaponToHit());
+		assertEquals(9, bc.rollInit());
+		
 	}
 }

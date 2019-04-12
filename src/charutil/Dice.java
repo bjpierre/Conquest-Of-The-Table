@@ -6,10 +6,15 @@ public class Dice {
 	private int sides;
 	Random roller;
 	
-	public Dice(int numSides)
+	public Dice(int numSides, Random r)
 	{
 		sides = numSides;
-		roller = new Random();
+		roller = r;
+	}
+	
+	public Dice(int numSides)
+	{
+		this(numSides, new Random());
 	}
 	
 	public int roll()

@@ -6,8 +6,10 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import character.BaseCharacter;
 import charutil.AbilityScore;
 import charutil.DamageType;
+import charutil.Dice;
 
 public class CharacterUtilJUnit {
 
@@ -46,4 +48,23 @@ public class CharacterUtilJUnit {
 		assertEquals(DamageType.piercing, DamageType.generateRandomType(rand));
 	}
 	
+	@Test
+	public void DiceTests()
+	{
+		//5,0,7,
+		Random rand = new Random(1);
+		Dice d = new Dice(8, rand);
+		assertEquals(6, d.roll());
+		d = new Dice(4, rand);
+		assertEquals(1, d.roll());
+		d = new Dice(20, rand);
+		assertEquals(8, d.roll());
+	}
+	
+	@Test
+	public void BaseCharacterTests()
+	{
+		Random rand = new Random();
+		BaseCharacter bc = new BaseCharacter(6, rand);
+	}
 }

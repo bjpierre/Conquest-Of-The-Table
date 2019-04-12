@@ -1,5 +1,7 @@
 package character;
 
+import java.util.Random;
+
 import charutil.Dice;
 
 public class Cleric extends BaseCharacter {
@@ -9,6 +11,12 @@ public class Cleric extends BaseCharacter {
 	public Cleric()
 	{
 		super(8,2);
+	}
+	
+	public Cleric(Random rand)
+	{
+		super(8,rand);
+		healDice = new Dice(8, rand);
 	}
 	
 	public Cleric(int[] givenStats) {

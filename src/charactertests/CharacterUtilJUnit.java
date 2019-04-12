@@ -8,6 +8,10 @@ import java.util.Random;
 import org.junit.Test;
 
 import character.BaseCharacter;
+import character.Cleric;
+import character.Fighter;
+import character.Rogue;
+import character.Wizard;
 import charutil.AbilityScore;
 import charutil.DamageType;
 import charutil.Dice;
@@ -80,7 +84,46 @@ public class CharacterUtilJUnit {
 		
 		assertEquals(-1, bc.attack());
 		assertEquals(-1, bc.weaponToHit());
-		assertEquals(9, bc.rollInit());
-		
+		assertEquals(9, bc.rollInit());	
+	}
+	
+	@Test
+	public void ClericTests()
+	{
+		Random rand = new Random(1);
+		Cleric c = new Cleric(rand);
+		assertEquals(6, c.getHP());
+		assertEquals(1, c.useSpecialAbility());
+		assertEquals("Heal", c.specialAbilityName());
+	}
+	
+	@Test
+	public void FighterTests()
+	{
+		Random rand = new Random(1);
+		Fighter f = new Fighter(rand);
+		assertEquals(9, f.getHP());
+		assertEquals(-1, f.useSpecialAbility());
+		assertEquals("Extra Attack", f.specialAbilityName());
+	}
+	
+	@Test
+	public void RogueTests()
+	{
+		Random rand = new Random(1);
+		Rogue r = new Rogue(rand);
+		assertEquals(6, r.getHP());
+		assertEquals(5, r.useSpecialAbility());
+		assertEquals("Sneak Attack",r.specialAbilityName());
+	}
+	
+	@Test
+	public void WizardTests()
+	{
+		Random rand = new Random(1);
+		Wizard w = new Wizard(rand);
+		assertEquals(4, w.getHP());
+		assertEquals(5, w.useSpecialAbility());
+		assertEquals("Fireball", w.specialAbilityName());
 	}
 }

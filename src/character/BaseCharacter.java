@@ -28,8 +28,16 @@ public class BaseCharacter {
 	
 	public BaseCharacter(int hpDiceSides, Random r)
 	{
-		this(hpDiceSides, 1);
-		d20 = new Dice(20, r);
+		d20 = new Dice(20,r );
+		for(int i = 0; i < 6; i++)
+		{
+			stats[i] = BASE_ARRAY[i];
+			mods[i] = AbilityScore.getModifier(BASE_ARRAY[i]);
+		}
+		move = 6;
+		ac = 10 + mods[AbilityScore.dex.ordinal()];
+		usesOfSpecial = 1;
+		rangeOfSpecial = 1;
 		hpDice = new Dice(hpDiceSides, r);
 		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
 	}

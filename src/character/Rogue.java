@@ -1,5 +1,7 @@
 package character;
 
+import java.util.Random;
+
 import charutil.Dice;
 
 public class Rogue extends BaseCharacter {
@@ -7,6 +9,12 @@ public class Rogue extends BaseCharacter {
 	private int sneakAtkNum;
 	private Dice sneakAtkDice;
 
+	public Rogue(Random rand)
+	{
+		super(8, rand);
+		sneakAtkDice = new Dice(6, rand);
+	}
+	
 	public Rogue()
 	{
 		super(8,1);

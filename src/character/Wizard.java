@@ -1,10 +1,18 @@
 package character;
 
+import java.util.Random;
+
 import charutil.Dice;
 
 public class Wizard extends BaseCharacter {
 
 	private Dice fireballDice;
+	
+	public Wizard(Random rand)
+	{
+		super(6, rand);
+		fireballDice = new Dice(6, rand);
+	}
 	
 	public Wizard()
 	{
@@ -23,6 +31,7 @@ public class Wizard extends BaseCharacter {
 
 	@Override
 	public int useSpecialAbility() {
+		super.useSpecialAbility();
 		return fireballDice.roll();
 	}
 

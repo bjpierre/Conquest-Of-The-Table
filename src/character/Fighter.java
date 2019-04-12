@@ -1,7 +1,14 @@
 package character;
 
+import java.util.Random;
+
 public class Fighter extends BaseCharacter {
 
+	public Fighter(Random rand)
+	{
+		super(10, rand);
+	}
+	
 	public Fighter()
 	{
 		super(10,1);

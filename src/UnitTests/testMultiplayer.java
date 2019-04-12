@@ -1,4 +1,4 @@
-package Multiplayer;
+package UnitTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -285,7 +285,7 @@ public class Board extends Application {
 		 */
 		public void mouseEvent() {
 			HashSet<Point> moves = CharacterAndBoardUtil.tempMoveList(getXloc(), getYloc(), box);
-
+			Point here = new Point(xloc, yloc);
 			// if this square occupied and not an ai's turn
 			if (!(turnHandler.vsAI && turnHandler.team) && c != null && tempSquare != null && tempSquare.c != null) {
 
@@ -296,10 +296,8 @@ public class Board extends Application {
 					tempSquare = null;
 
 					// if combat needs to happen
-				} else if (tempSquare. != getHandler().getTeam()
-						&& Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
-						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) {
-
+				} else if (tempSquare.c.getTeam() != c.getTeam()
+						&& CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box).contains(here)) {
 					// if attacker won
 					if (CharacterAndBoardUtil.tempHandleCombat(tempSquare.c, c)) {
 						styleSquares(moves, "black");
@@ -335,7 +333,7 @@ public class Board extends Application {
 				// if no character present and square clicked
 			} else if (c == null && tempSquare != null) {
 
-				if (CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box).contains(new Point(this.xloc, this.yloc)))
+				if (CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box).contains(here))
 				{
 					if (connected)
 						connection.sendCharacterMove(tempSquare, this);

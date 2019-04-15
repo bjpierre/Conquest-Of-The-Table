@@ -245,39 +245,35 @@ public class Board extends Application {
 
 			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
 				this.getChildren().add(knightRed);
-
-				c = new Fighter();
+				c = new Fighter(false);
 			}
 			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
 				this.getChildren().add(knightBlue);
-				c = new Fighter();
+				c = new Fighter(true);
 			}
 			if (column == 7 && row == 1) {
 				this.getChildren().add(wizardRed);
-
-				c = new Wizard();
+				c = new Wizard(false);
 			}
 			if (column == 7 && row == 8) {
 				this.getChildren().add(wizardBlue);
-				c = new Wizard();
+				c = new Wizard(true);
 			}
 			if (column == 4 && row == 1) {
 				this.getChildren().add(clericRed);
-				c = new Cleric();
-
+				c = new Cleric(false);
 			}
 			if (column == 4 && row == 8) {
 				this.getChildren().add(clericBlue);
-				c = new Cleric();
+				c = new Cleric(true);
 			}
 			if (column == 10 && row == 1) {
 				this.getChildren().add(rogueRed);
-				c = new Rogue();
+				c = new Rogue(false);
 			}
 			if (column == 10 && row == 8) {
 				this.getChildren().add(rogueBlue);
-				c = new Rogue();
-
+				c = new Rogue(true);
 			}
 
 			if (c != null)
@@ -300,7 +296,7 @@ public class Board extends Application {
 					tempSquare = null;
 
 					// if combat needs to happen
-				} else if (tempSquare.getHandler().getTeam() != getHandler().getTeam()
+				} else if (tempSquare. != getHandler().getTeam()
 						&& Math.abs(tempSquare.getHandler().getX() - this.getXloc()) <= 1
 						&& Math.abs(tempSquare.getHandler().getY() - this.getYloc()) <= 1) {
 

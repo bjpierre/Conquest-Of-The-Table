@@ -14,9 +14,10 @@ public class Wizard extends BaseCharacter {
 		fireballDice = new Dice(6, rand);
 	}
 	
-	public Wizard()
+	public Wizard(boolean team)
 	{
 		super(6,5);
+		super.team = team;
 	}
 	
 	public Wizard(int[] givenStats) {

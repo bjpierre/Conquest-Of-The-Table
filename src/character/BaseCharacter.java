@@ -1,6 +1,5 @@
 package character;
 
-import java.awt.Point;
 import java.util.Random;
 
 import charutil.AbilityScore;
@@ -27,6 +26,7 @@ public class BaseCharacter {
 	private int usesOfSpecial;
 	private int rangeOfSpecial;
 	private boolean isSelected;
+	protected boolean team;
 	
 	public BaseCharacter(int hpDiceSides, Random r)
 	{
@@ -36,7 +36,7 @@ public class BaseCharacter {
 			stats[i] = BASE_ARRAY[i];
 			mods[i] = AbilityScore.getModifier(BASE_ARRAY[i]);
 		}
-		move = 6;
+		move = 1;
 		ac = 10 + mods[AbilityScore.dex.ordinal()];
 		usesOfSpecial = 1;
 		rangeOfSpecial = 1;
@@ -180,5 +180,10 @@ public class BaseCharacter {
 	public void setClicked(boolean b)
 	{
 		isSelected = b;
+	}
+	
+	public boolean getTeam()
+	{
+		return team;
 	}
 }

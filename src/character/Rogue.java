@@ -16,9 +16,10 @@ public class Rogue extends BaseCharacter {
 		sneakAtkNum = 1;
 	}
 	
-	public Rogue()
+	public Rogue(boolean team)
 	{
 		super(8,1);
+		super.team = team;
 	}
 	
 	public Rogue(int[] givenStats) {

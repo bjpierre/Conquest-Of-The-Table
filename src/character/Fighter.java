@@ -9,9 +9,10 @@ public class Fighter extends BaseCharacter {
 		super(10, rand);
 	}
 	
-	public Fighter()
+	public Fighter(boolean team)
 	{
 		super(10,1);
+		super.team = team;
 	}
 	
 	public Fighter(int[] givenStats) 

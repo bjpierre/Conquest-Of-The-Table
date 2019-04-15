@@ -8,9 +8,10 @@ public class Cleric extends BaseCharacter {
 
 	private Dice healDice;
 	
-	public Cleric()
+	public Cleric(boolean team)
 	{
 		super(8,2);
+		super.team = team;
 	}
 	
 	public Cleric(Random rand)

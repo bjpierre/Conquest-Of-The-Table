@@ -64,7 +64,7 @@ public class Board extends Application {
 
 		connected = bootMultiplayer();
 		
-		turnHandler = new turnHandler(false);
+		turnHandler = new turnHandler(false, false);
 
 		border = new BorderPane();
 		Scene scene = new Scene(border, 1500, 1000);
@@ -152,7 +152,7 @@ public class Board extends Application {
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
-		private CharacterHandler c;
+		private BaseCharacter c;
 		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
@@ -250,38 +250,37 @@ public class Board extends Application {
 			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
 				this.getChildren().add(knightRed);
 
-				c = new CharacterHandler(new Fighter(), new Point(row, column), row == 1);
+				c = new Fighter();
 			}
 			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
 				this.getChildren().add(knightBlue);
-				c = new CharacterHandler(new Fighter(), new Point(row, column), row == 1);
+				c = new Fighter();
 			}
 			if (column == 7 && row == 1) {
 				this.getChildren().add(wizardRed);
 
-				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
+				c = new Wizard();
 			}
 			if (column == 7 && row == 8) {
 				this.getChildren().add(wizardBlue);
-				c = new CharacterHandler(new Wizard(), new Point(row, column), row == 1);
+				c = new Wizard();
 			}
 			if (column == 4 && row == 1) {
 				this.getChildren().add(clericRed);
-
-				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
+				c = new Cleric();
 
 			}
 			if (column == 4 && row == 8) {
 				this.getChildren().add(clericBlue);
-				c = new CharacterHandler(new Cleric(), new Point(row, column), row == 1);
+				c = new Cleric();
 			}
 			if (column == 10 && row == 1) {
 				this.getChildren().add(rogueRed);
-				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
+				c = new Rogue();
 			}
 			if (column == 10 && row == 8) {
 				this.getChildren().add(rogueBlue);
-				c = new CharacterHandler(new Rogue(), new Point(row, column), row == 1);
+				c = new Rogue();
 
 			}
 			
@@ -375,10 +374,6 @@ public class Board extends Application {
 		}
 
 		public BaseCharacter getCharacter() {
-			return c.getCharacter();
-		}
-
-		public CharacterHandler getHandler() {
 			return c;
 		}
 
@@ -415,22 +410,24 @@ public class Board extends Application {
 	 *
 	 */
 	public class turnHandler {
-		private Boolean team;
+		private boolean team, vsAI;
 		private int loc;
 		private int size;
-		public Queue<CharacterHandler> characterList = new Queue<>();
-		public turnHandler(Boolean startTeam) {
+		public Queue<BaseCharacter> characterList = new Queue<>();
+		public BaseCharacter current;
+		
+		public turnHandler(boolean startTeam, boolean isVsAI) {
 			team = startTeam;
 			loc = 0;
 			size = 0;
-			
+			vsAI = isVsAI;
 		}
 		
 		/**
 		 * adds a character to the que
 		 * @param character
 		 */
-		public void addCharacter(CharacterHandler character) {
+		public void addCharacter(BaseCharacter character) {
 			characterList.enqueue(character);
 			size++;
 		}
@@ -439,11 +436,11 @@ public class Board extends Application {
 		 * returns the next character in the list
 		 * @return the next character, null if at end of que;
 		 */
-		public CharacterHandler getNextCharacter() {
+		public BaseCharacter getNextCharacter() {
 			if(loc > size) return null;
 			loc++;
 			try {
-				CharacterHandler temp = characterList.dequeue();
+				BaseCharacter temp = characterList.dequeue();
 				characterList.enqueue(temp);
 				return temp;
 			} catch (InterruptedException e) {
@@ -453,6 +450,10 @@ public class Board extends Application {
 			
 			return null;
 			
+		}
+		
+		public void endTurn() {
+			team = !team;
 		}
 		
 		/**
@@ -474,7 +475,7 @@ public class Board extends Application {
 		 * sets the team
 		 * @param team true for team one, false for team two
 		 */
-		public void setTeam(Boolean team) {
+		public void setTeam(boolean team) {
 			this.team = team;
 		}
 		
@@ -482,7 +483,7 @@ public class Board extends Application {
 		 * Returns team in play
 		 * @return true for team one, false for team two
 		 */
-		public Boolean getTeam() {
+		public boolean getTeam() {
 			return team;
 		}
 		

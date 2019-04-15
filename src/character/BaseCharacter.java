@@ -1,5 +1,6 @@
 package character;
 
+import java.awt.Point;
 import java.util.Random;
 
 import charutil.AbilityScore;
@@ -25,6 +26,7 @@ public class BaseCharacter {
 	private int ac;
 	private int usesOfSpecial;
 	private int rangeOfSpecial;
+	private boolean isSelected;
 	
 	public BaseCharacter(int hpDiceSides, Random r)
 	{
@@ -168,5 +170,15 @@ public class BaseCharacter {
 	public String specialAbilityName()
 	{
 		return "NONE";
+	}
+
+	public boolean getClicked()
+	{
+		return isSelected;
+	}
+
+	public void setClicked(boolean b)
+	{
+		isSelected = b;
 	}
 }

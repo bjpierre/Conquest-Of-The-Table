@@ -1,6 +1,8 @@
 package GameBoard;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.HashSet;
 
 import Multiplayer.CharacterHandler;
@@ -51,6 +53,10 @@ public class Board extends Application {
 	 * Local class to handle turns
 	 */
 	protected turnHandler turnHandler;
+	
+	public double sceneH;
+		
+	public double sceneW;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -59,12 +65,19 @@ public class Board extends Application {
 	@Override
 	public void start(Stage stage) {
 
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		sceneH = screenSize.getHeight();
+		sceneW = screenSize.getWidth();
+		
+		//those in the first row are team 1, second team 2
+		characters = new BaseCharacter[2][4];
+		
 		connected = bootMultiplayer();
 
 		turnHandler = new turnHandler(false, false);
 
 		border = new BorderPane();
-		Scene scene = new Scene(border, 1500, 1000);
+		Scene scene = new Scene(border, sceneW, sceneH);
 
 		restart = new Button("Restart Game");
 		restart.setPadding(new Insets(10, 10, 10, 10));
@@ -85,8 +98,7 @@ public class Board extends Application {
 
 		});
 		
-		//those in the first row are team 1, second team 2
-		characters = new BaseCharacter[2][4];
+		stage.setFullScreen(true);
 
 	}
 
@@ -205,40 +217,39 @@ public class Board extends Application {
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
-			this.setPrefSize(100, 100);
+			this.setPrefSize(76, 76);
 			this.setOnMouseClicked(e -> mouseEvent());
-
 			// movesTile.setFitWidth(99);
 			// movesTile.setPreserveRatio(true);
 
-			grass.setFitWidth(99);
+			grass.setFitWidth(75);
 			grass.setPreserveRatio(true);
 
-			path.setFitWidth(99);
+			path.setFitWidth(75);
 			path.setPreserveRatio(true);
 
-			knightRed.setFitWidth(99);
+			knightRed.setFitWidth(75);
 			knightRed.setPreserveRatio(true);
 
-			wizardRed.setFitWidth(99);
+			wizardRed.setFitWidth(75);
 			wizardRed.setPreserveRatio(true);
 
-			clericRed.setFitWidth(99);
+			clericRed.setFitWidth(75);
 			clericRed.setPreserveRatio(true);
 
-			rogueRed.setFitWidth(99);
+			rogueRed.setFitWidth(75);
 			rogueRed.setPreserveRatio(true);
 
-			knightBlue.setFitWidth(99);
+			knightBlue.setFitWidth(75);
 			knightBlue.setPreserveRatio(true);
 
-			wizardBlue.setFitWidth(99);
+			wizardBlue.setFitWidth(75);
 			wizardBlue.setPreserveRatio(true);
 
-			clericBlue.setFitWidth(99);
+			clericBlue.setFitWidth(75);
 			clericBlue.setPreserveRatio(true);
 
-			rogueBlue.setFitWidth(99);
+			rogueBlue.setFitWidth(75);
 			rogueBlue.setPreserveRatio(true);
 
 			if (column != 7) {

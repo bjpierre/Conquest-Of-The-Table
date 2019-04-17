@@ -58,7 +58,9 @@ public class Board extends Application {
 
 	@Override
 	public void start(Stage stage) {
-
+		//those in the first row are team 1, second team 2
+		characters = new BaseCharacter[2][4];
+		
 		connected = bootMultiplayer();
 
 		turnHandler = new turnHandler(false, false);
@@ -84,10 +86,6 @@ public class Board extends Application {
 				connection.leaveServer();
 
 		});
-		
-		//those in the first row are team 1, second team 2
-		characters = new BaseCharacter[2][4];
-
 	}
 
 	/**

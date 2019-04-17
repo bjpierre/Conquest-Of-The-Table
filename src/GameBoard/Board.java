@@ -169,18 +169,10 @@ public class Board extends Application {
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
-		private Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
-		private ImageView knightRed = new ImageView();
-		private Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
-		private ImageView wizardRed = new ImageView();
 		private Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
 		private ImageView clericRed = new ImageView();
 		private Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
 		private ImageView rogueRed = new ImageView();
-		private Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
-		private ImageView knightBlue = new ImageView();
-		private Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
-		private ImageView wizardBlue = new ImageView();
 		private Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
 		private ImageView clericBlue = new ImageView();
 		private Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
@@ -199,17 +191,9 @@ public class Board extends Application {
 
 			pathPlace = 1;
 
-			knightRed.setImage(knightRedImg);
-
-			wizardRed.setImage(wizardRedImg);
-
 			clericRed.setImage(clericRedImg);
 
 			rogueRed.setImage(rogueRedImg);
-
-			knightBlue.setImage(knightBlueImg);
-
-			wizardBlue.setImage(wizardBlueImg);
 
 			clericBlue.setImage(clericBlueImg);
 
@@ -224,27 +208,16 @@ public class Board extends Application {
 
 			grass.setFitWidth(75);
 			grass.setPreserveRatio(true);
-
+	
 			path.setFitWidth(75);
 			path.setPreserveRatio(true);
 
-			knightRed.setFitWidth(75);
-			knightRed.setPreserveRatio(true);
-
-			wizardRed.setFitWidth(75);
-			wizardRed.setPreserveRatio(true);
 
 			clericRed.setFitWidth(75);
 			clericRed.setPreserveRatio(true);
 
 			rogueRed.setFitWidth(75);
 			rogueRed.setPreserveRatio(true);
-
-			knightBlue.setFitWidth(75);
-			knightBlue.setPreserveRatio(true);
-
-			wizardBlue.setFitWidth(75);
-			wizardBlue.setPreserveRatio(true);
 
 			clericBlue.setFitWidth(75);
 			clericBlue.setPreserveRatio(true);
@@ -259,24 +232,16 @@ public class Board extends Application {
 			}
 
 			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
-				this.getChildren().add(knightRed);
-				c = new Fighter(false);
-				characters[0][0] = c;
+				setKnight("red", row, column);
 			}
 			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
-				this.getChildren().add(knightBlue);
-				c = new Fighter(true);
-				characters[1][0] = c;
+				setKnight("blue", row, column);
 			}
 			if (column == 7 && row == 1) {
-				this.getChildren().add(wizardRed);
-				c = new Wizard(false);
-				characters[0][1] = c;
+				setWizard("red", row, column);
 			}
 			if (column == 7 && row == 8) {
-				this.getChildren().add(wizardBlue);
-				c = new Wizard(true);
-				characters[1][1] = c;
+				setWizard("blue", row, column);
 			}
 			if (column == 4 && row == 1) {
 				this.getChildren().add(clericRed);
@@ -303,6 +268,63 @@ public class Board extends Application {
 //				turnHandler.addCharacter(c);
 		}
 
+		
+		
+		public void setKnight(String color, int row, int column)
+		{
+			if(color.compareTo("red") == 0)
+			{
+				Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
+				ImageView knightRed = new ImageView();
+				knightRed.setImage(knightRedImg);
+				knightRed.setFitWidth(75);
+				knightRed.setPreserveRatio(true);
+				this.getChildren().add(knightRed);
+				c = new Fighter(false);
+				characters[0][0] = c;
+			}
+			else if(color.compareTo("blue")==0)
+			{
+				Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
+				ImageView knightBlue = new ImageView();
+				knightBlue.setImage(knightBlueImg);
+				knightBlue.setFitWidth(75);
+				knightBlue.setPreserveRatio(true);
+				this.getChildren().add(knightBlue);
+				c = new Fighter(true);
+				characters[1][0] = c;
+			}
+		}
+		
+		public void setWizard(String color, int row, int column)
+		{
+			if(color.compareTo("red") == 0)
+			{
+				Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
+				ImageView wizardRed = new ImageView();
+				wizardRed.setImage(wizardRedImg);
+				wizardRed.setFitWidth(75);
+				wizardRed.setPreserveRatio(true);
+				this.getChildren().add(wizardRed);
+				c = new Wizard(false);
+				characters[0][1] = c;
+			}
+			else if(color.compareTo("blue")==0)
+			{
+				Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
+				ImageView wizardBlue = new ImageView();
+				wizardBlue.setImage(wizardBlueImg);
+				wizardBlue.setFitWidth(75);
+				wizardBlue.setPreserveRatio(true);
+				this.getChildren().add(wizardBlue);
+				c = new Wizard(true);
+				characters[1][1] = c;
+			}
+		}
+		
+		
+		
+		
 		/**
 		 * Handles the mouse event generated by clicking this tile
 		 */

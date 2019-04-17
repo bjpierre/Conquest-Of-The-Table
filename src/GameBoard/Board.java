@@ -25,7 +25,8 @@ import sun.misc.Queue;
 
 public class Board extends Application {
 	public Square[][] box = new Square[10][15];
-
+	private BaseCharacter[][] characters;
+	
 	BorderPane border;
 
 	Button restart;
@@ -83,6 +84,9 @@ public class Board extends Application {
 				connection.leaveServer();
 
 		});
+		
+		//those in the first row are team 1, second team 2
+		characters = new BaseCharacter[2][4];
 
 	}
 
@@ -246,38 +250,46 @@ public class Board extends Application {
 			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
 				this.getChildren().add(knightRed);
 				c = new Fighter(false);
+				characters[0][0] = c;
 			}
 			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
 				this.getChildren().add(knightBlue);
 				c = new Fighter(true);
+				characters[1][0] = c;
 			}
 			if (column == 7 && row == 1) {
 				this.getChildren().add(wizardRed);
 				c = new Wizard(false);
+				characters[0][1] = c;
 			}
 			if (column == 7 && row == 8) {
 				this.getChildren().add(wizardBlue);
 				c = new Wizard(true);
+				characters[1][1] = c;
 			}
 			if (column == 4 && row == 1) {
 				this.getChildren().add(clericRed);
 				c = new Cleric(false);
+				characters[0][2] = c;
 			}
 			if (column == 4 && row == 8) {
 				this.getChildren().add(clericBlue);
 				c = new Cleric(true);
+				characters[1][2] = c;
 			}
 			if (column == 10 && row == 1) {
 				this.getChildren().add(rogueRed);
 				c = new Rogue(false);
+				characters[0][3] = c;
 			}
 			if (column == 10 && row == 8) {
 				this.getChildren().add(rogueBlue);
 				c = new Rogue(true);
+				characters[1][3] = c;
 			}
 
-			if (c != null)
-				turnHandler.addCharacter(c);
+//			if (c != null)
+//				turnHandler.addCharacter(c);
 		}
 
 		/**
@@ -302,7 +314,7 @@ public class Board extends Application {
 					if (CharacterAndBoardUtil.tempHandleCombat(tempSquare.c, c)) {
 						styleSquares(moves, "black");
 						removeCharacter();
-						tempSquare.getHandler().setClicked(false);
+						c.setClicked(false);
 						styleSquares(
 								CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
 								"black");
@@ -322,6 +334,7 @@ public class Board extends Application {
 						tempSquare = null;
 
 					}
+					turnHandler.endTurn();
 				}
 			}
 			// If character not selected
@@ -348,6 +361,7 @@ public class Board extends Application {
 					c.setClicked(false);
 					tempSquare.c = null;
 					tempSquare = null;
+					turnHandler.endTurn();
 				}
 
 			}
@@ -445,6 +459,12 @@ public class Board extends Application {
 
 		public void endTurn() {
 			team = !team;
+			if(vsAI && team == true)
+				playAI();
+		}
+		
+		private void playAI() {
+			
 		}
 
 		/**

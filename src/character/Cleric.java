@@ -10,8 +10,7 @@ public class Cleric extends BaseCharacter {
 	
 	public Cleric(boolean team)
 	{
-		super(8,2);
-		super.team = team;
+		super(8,2, team);
 	}
 	
 	public Cleric(Random rand)
@@ -20,8 +19,14 @@ public class Cleric extends BaseCharacter {
 		healDice = new Dice(8, rand);
 	}
 	
-	public Cleric(int[] givenStats) {
-		super(givenStats, 8, 2);
+	public Cleric(int [] givenStats, boolean team)
+	{
+		this(givenStats, 0, 0, team);
+	}
+	
+	public Cleric(int[] givenStats, int x, int y, boolean team)
+	{
+		super(givenStats, 8, 2, x, y, team);
 		healDice = new Dice(8);
 	}
 

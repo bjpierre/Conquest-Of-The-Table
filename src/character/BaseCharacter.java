@@ -27,6 +27,7 @@ public class BaseCharacter {
 	private int rangeOfSpecial;
 	private boolean isSelected;
 	protected boolean team;
+	private int x, y;
 	
 	public BaseCharacter(int hpDiceSides, Random r)
 	{
@@ -44,12 +45,12 @@ public class BaseCharacter {
 		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
 	}
 	
-	protected BaseCharacter(int hpDiceSides, int SpecialRange)
+	protected BaseCharacter(int hpDiceSides, int SpecialRange, boolean team)
 	{
-		this(BASE_ARRAY, hpDiceSides, SpecialRange);
+		this(BASE_ARRAY, hpDiceSides, SpecialRange, 0, 0, team);
 	}
 	
-	protected BaseCharacter(int[] givenStats, int hpDiceSides, int specialRange)
+	protected BaseCharacter(int[] givenStats, int hpDiceSides, int specialRange, int x, int y, boolean team)
 	{
 		d20 = new Dice(20);
 		if(givenStats.length == NUM_OF_STATS)
@@ -66,6 +67,9 @@ public class BaseCharacter {
 		rangeOfSpecial = specialRange;
 		hpDice = new Dice(hpDiceSides);
 		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
+		this.x = x;
+		this.y = y;
+		this.team = team;
 	}
 	
 	public int rollInit()
@@ -185,5 +189,15 @@ public class BaseCharacter {
 	public boolean getTeam()
 	{
 		return team;
+	}
+	
+	public int getX()
+	{
+		return x;
+	}
+	
+	public int getY()
+	{
+		return y;
 	}
 }

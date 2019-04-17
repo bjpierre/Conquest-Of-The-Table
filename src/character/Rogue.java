@@ -18,12 +18,16 @@ public class Rogue extends BaseCharacter {
 	
 	public Rogue(boolean team)
 	{
-		super(8,1);
-		super.team = team;
+		super(8,1, team);
 	}
 	
-	public Rogue(int[] givenStats) {
-		super(givenStats, 8, 1);
+	public Rogue(int[] givenStats, boolean team)
+	{
+		this(givenStats, 0, 0, team);
+	}
+	
+	public Rogue(int[] givenStats, int x, int y, boolean team) {
+		super(givenStats, 8, 1, x, y, team);
 		sneakAtkNum = 1;
 		sneakAtkDice = new Dice(6);
 	}

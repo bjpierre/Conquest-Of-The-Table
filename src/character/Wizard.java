@@ -16,12 +16,16 @@ public class Wizard extends BaseCharacter {
 	
 	public Wizard(boolean team)
 	{
-		super(6,5);
-		super.team = team;
+		super(6,5, team);
 	}
 	
-	public Wizard(int[] givenStats) {
-		super(givenStats, 6, 5);
+	public Wizard(int[] givenStats, boolean team)
+	{
+		this(givenStats, 0, 0, team);
+	}
+	
+	public Wizard(int[] givenStats, int x, int y, boolean team) {
+		super(givenStats, 6, 5, x, y, team);
 		fireballDice = new Dice (6);
 	}
 

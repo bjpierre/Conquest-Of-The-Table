@@ -11,13 +11,17 @@ public class Fighter extends BaseCharacter {
 	
 	public Fighter(boolean team)
 	{
-		super(10,1);
-		super.team = team;
+		super(10,1, team);
 	}
 	
-	public Fighter(int[] givenStats) 
+	public Fighter(int[] givenStats, boolean team) 
 	{
-		super(givenStats, 10, 1);
+		this(givenStats, 0, 0, team);
+	}
+	
+	public Fighter(int[] givenStats, int x, int y, boolean team)
+	{
+		super(givenStats, 10, 1, x, y, team);
 	}
 
 	@Override

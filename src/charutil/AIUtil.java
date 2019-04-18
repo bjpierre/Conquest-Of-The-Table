@@ -13,6 +13,7 @@ public class AIUtil {
 	{
 		Random rand = new Random();
 		int next = rand.nextInt(5);
+		//change back 0 to next
 		BaseCharacter bc = characters[1][0];
 		Node[] choices = AIChoices(bc, characters[0], box);
 		
@@ -33,19 +34,20 @@ public class AIUtil {
 		Node move = getNextMove(choice);
 		Square toMove = box[move.y][move.x];
 		Square fromMove = box[bc.getY()][bc.getX()];
-		if(toMove.getCharacter() == null)
+		if(choice != null && toMove.getCharacter() == null)
 		{
 			//Just move
-			toMove.getChildren().add(fromMove.getChildren().get(fromMove.getChildren().size()-1));
-			fromMove.getChildren().remove(toMove.getChildren().get(toMove.getChildren().size()-1));
-			bc.setLoc(move.x, move.y);
+			toMove.addCharacter(bc, fromMove.getChildren().get(fromMove.getChildren().size()-1));
+			fromMove.removeCharacter();
 		}
 		else
 		{
 			//Combat
-			if(CharacterAndBoardUtil.handleCombat(fromMove.getCharacter(), toMove.getCharacter()));
+			if(CharacterAndBoardUtil.handleCombat(bc, toMove.getCharacter()));
 			{
-				toMove.getChildren().remove(toMove.getChildren().get(toMove.getChildren().size()-1));
+				toMove.removeCharacter();
+				//should be [0][loc]
+				characters[0][0] = null;
 			}
 		}
 		
@@ -149,5 +151,10 @@ class Node
 	{
 		prev = n;
 		return this;
+	}
+	
+	public String toString()
+	{
+		return "(" + x + ", " + y + ", " + dist + ")";
 	}
 }

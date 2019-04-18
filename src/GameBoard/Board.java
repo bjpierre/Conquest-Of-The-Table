@@ -184,12 +184,6 @@ public class Board extends Application {
 
 			pathPlace = 1;
 
-
-
-
-
-
-
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(76, 76);
@@ -202,12 +196,6 @@ public class Board extends Application {
 	
 			path.setFitWidth(75);
 			path.setPreserveRatio(true);
-
-
-
-
-
-
 
 			if (column != 7) {
 				this.getChildren().add(grass);

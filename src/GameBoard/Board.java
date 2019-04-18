@@ -361,7 +361,7 @@ public class Board extends Application {
 							"black");
 					setStyle("-fx-border-color: black;");
 					this.c = tempSquare.c;
-	
+					this.c.setLoc(xloc, yloc);
 					getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size() - 1));
 					tempSquare.getChildren().remove(getChildren().get(getChildren().size() - 1));
 					c.setClicked(false);
@@ -471,6 +471,7 @@ public class Board extends Application {
 		
 		private void playAI() {
 			AIUtil.AIUpdateBoard(characters, box);
+			team = !team;
 		}
 
 		/**

@@ -29,14 +29,16 @@ public class AIUtil {
 			}
 		}
 		
-		Node move = getNextMove(choices[loc]);
+		Node choice = choices[loc];
+		Node move = getNextMove(choice);
 		Square toMove = box[move.y][move.x];
-		Square fromMove = box[bc.getX()][bc.getY()];
+		Square fromMove = box[bc.getY()][bc.getX()];
 		if(toMove.getCharacter() == null)
 		{
 			//Just move
 			toMove.getChildren().add(fromMove.getChildren().get(fromMove.getChildren().size()-1));
 			fromMove.getChildren().remove(toMove.getChildren().get(toMove.getChildren().size()-1));
+			bc.setLoc(move.x, move.y);
 		}
 		else
 		{
@@ -52,7 +54,7 @@ public class AIUtil {
 		for(int i = 0; i < distances.length; i++)
 		{
 			BaseCharacter c = enemies[i];
-			Node n = Dijkstra(attacker.getX(), attacker.getY(), box, c.getX(), c.getY());
+			Node n = Dijkstra(c.getX(), c.getY(), box, attacker.getX(), attacker.getY());
 			distances[i] = n;
 		}
 		
@@ -115,15 +117,7 @@ public class AIUtil {
 
 	public static Node getNextMove(Node n)
 	{
-		Node cur = n;
-		Node prev = null;
-		while(cur.prev != null)
-		{
-			prev = cur;
-			cur = cur.prev;
-		}
-		
-		return prev;
+		return (n.prev == null) ? n : n.prev;
 	}
 }
 

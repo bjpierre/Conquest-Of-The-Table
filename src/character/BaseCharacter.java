@@ -200,4 +200,10 @@ public class BaseCharacter {
 	{
 		return y;
 	}
+	
+	public void setLoc(int newX, int newY)
+	{
+		x = newX;
+		y = newY;
+	}
 }

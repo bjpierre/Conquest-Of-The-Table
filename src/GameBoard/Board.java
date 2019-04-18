@@ -362,11 +362,18 @@ public class Board extends Application {
 						//combat
 						if(CharacterAndBoardUtil.handleCombat(tempSquare.getCharacter(), c))
 						{
-							removeCharacter();
-							styleSquares(moves, "black");
+							System.out.println("PLAYER " + (turnHandler.team ? 2 : 1) + " HITs");
 							if (connected)
 								connection.sendRemoveCharacter(this);
 						}
+						else
+						{
+							System.out.println("PLAYER " + (turnHandler.team ? 2 : 1) + " MISSes");
+						}
+						
+						removeCharacter();
+						styleSquares(moves, "black");
+						tempSquare.c.setClicked(false);
 						turnHandler.endTurn();
 					}
 				}

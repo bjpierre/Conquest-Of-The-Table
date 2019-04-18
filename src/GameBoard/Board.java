@@ -407,7 +407,6 @@ public class Board extends Application {
 		public void removeCharacter() {
 			c = null;
 			getChildren().remove(getChildren().get(getChildren().size() - 1));
-
 		}
 
 	}

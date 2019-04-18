@@ -13,7 +13,7 @@ public class AIUtil {
 	{
 		Random rand = new Random();
 		int next = rand.nextInt(5);
-		BaseCharacter bc = characters[1][next];
+		BaseCharacter bc = characters[1][0];
 		Node[] choices = AIChoices(bc, characters[0], box);
 		
 		int min = choices[0].dist;
@@ -43,6 +43,10 @@ public class AIUtil {
 		else
 		{
 			//Combat
+			if(CharacterAndBoardUtil.handleCombat(fromMove.getCharacter(), toMove.getCharacter()));
+			{
+				toMove.getChildren().remove(toMove.getChildren().get(toMove.getChildren().size()-1));
+			}
 		}
 		
 	}
@@ -54,8 +58,15 @@ public class AIUtil {
 		for(int i = 0; i < distances.length; i++)
 		{
 			BaseCharacter c = enemies[i];
-			Node n = Dijkstra(c.getX(), c.getY(), box, attacker.getX(), attacker.getY());
-			distances[i] = n;
+			if(c != null)
+			{
+				Node n = Dijkstra(c.getX(), c.getY(), box, attacker.getX(), attacker.getY());
+				distances[i] = n;
+			}
+			else
+			{
+				distances[i] = new Node(-1,-1, Integer.MAX_VALUE);
+			}
 		}
 		
 		return distances;

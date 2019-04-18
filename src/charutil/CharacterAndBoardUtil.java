@@ -141,8 +141,17 @@ public class CharacterAndBoardUtil {
 	 * @param defender the character defending
 	 * @return true if the attacker has won
 	 */
-
-
+	
+	public static boolean handleCombat(BaseCharacter attacker, BaseCharacter defender)
+	{
+		if(attacker.weaponToHit() >= defender.getAC())
+		{
+			defender.takeDamage(attacker.attack());
+		}
+		
+		return (defender.getHP() <= 0);
+	}
+	
 	public static boolean tempHandleCombat(BaseCharacter attacker, BaseCharacter defender) {
 		return (attacker.generateHP() + 2>defender.generateHP());
 	}

@@ -10,6 +10,7 @@ import character.Cleric;
 import character.Fighter;
 import character.Rogue;
 import character.Wizard;
+import charutil.AIUtil;
 import charutil.CharacterAndBoardUtil;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -59,11 +60,11 @@ public class Board extends Application {
 	@Override
 	public void start(Stage stage) {
 		//those in the first row are team 1, second team 2
-		characters = new BaseCharacter[2][4];
+		characters = new BaseCharacter[2][5];
 		
 		connected = bootMultiplayer();
 
-		turnHandler = new turnHandler(false, false);
+		turnHandler = new turnHandler(false, true);
 
 		border = new BorderPane();
 		Scene scene = new Scene(border, 1500, 1000);
@@ -203,40 +204,40 @@ public class Board extends Application {
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
-			this.setPrefSize(100, 100);
+			this.setPrefSize(76, 76);
 			this.setOnMouseClicked(e -> mouseEvent());
 
 			// movesTile.setFitWidth(99);
 			// movesTile.setPreserveRatio(true);
 
-			grass.setFitWidth(99);
+			grass.setFitWidth(75);
 			grass.setPreserveRatio(true);
 
-			path.setFitWidth(99);
+			path.setFitWidth(75);
 			path.setPreserveRatio(true);
 
-			knightRed.setFitWidth(99);
+			knightRed.setFitWidth(75);
 			knightRed.setPreserveRatio(true);
 
-			wizardRed.setFitWidth(99);
+			wizardRed.setFitWidth(75);
 			wizardRed.setPreserveRatio(true);
 
-			clericRed.setFitWidth(99);
+			clericRed.setFitWidth(75);
 			clericRed.setPreserveRatio(true);
 
-			rogueRed.setFitWidth(99);
+			rogueRed.setFitWidth(75);
 			rogueRed.setPreserveRatio(true);
 
-			knightBlue.setFitWidth(99);
+			knightBlue.setFitWidth(75);
 			knightBlue.setPreserveRatio(true);
 
-			wizardBlue.setFitWidth(99);
+			wizardBlue.setFitWidth(75);
 			wizardBlue.setPreserveRatio(true);
 
-			clericBlue.setFitWidth(99);
+			clericBlue.setFitWidth(75);
 			clericBlue.setPreserveRatio(true);
 
-			rogueBlue.setFitWidth(99);
+			rogueBlue.setFitWidth(75);
 			rogueBlue.setPreserveRatio(true);
 
 			if (column != 7) {
@@ -245,49 +246,56 @@ public class Board extends Application {
 				this.getChildren().add(path);
 			}
 
-			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
+			if (column == 1 && row == 1) {
 				this.getChildren().add(knightRed);
-				c = new Fighter(false);
+				c = new Fighter(1, 1, false);
+				characters[0][4] = c;
+			}
+			if (column == 13 && row == 1) {
+				this.getChildren().add(knightRed);
+				c = new Fighter(1, 1, false);
 				characters[0][0] = c;
 			}
-			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
+			if (column == 1 && row == 8) {
 				this.getChildren().add(knightBlue);
-				c = new Fighter(true);
+				c = new Fighter(1, 8, true);
 				characters[1][0] = c;
+			}
+			if (column == 13 && row == 8) {
+				this.getChildren().add(knightBlue);
+				c = new Fighter(13, 8, true);
+				characters[1][4] = c;
 			}
 			if (column == 7 && row == 1) {
 				this.getChildren().add(wizardRed);
-				c = new Wizard(false);
+				c = new Wizard(7,1,false);
 				characters[0][1] = c;
 			}
 			if (column == 7 && row == 8) {
 				this.getChildren().add(wizardBlue);
-				c = new Wizard(true);
+				c = new Wizard(7,1,true);
 				characters[1][1] = c;
 			}
 			if (column == 4 && row == 1) {
 				this.getChildren().add(clericRed);
-				c = new Cleric(false);
+				c = new Cleric(4,1,false);
 				characters[0][2] = c;
 			}
 			if (column == 4 && row == 8) {
 				this.getChildren().add(clericBlue);
-				c = new Cleric(true);
+				c = new Cleric(4,8,true);
 				characters[1][2] = c;
 			}
 			if (column == 10 && row == 1) {
 				this.getChildren().add(rogueRed);
-				c = new Rogue(false);
+				c = new Rogue(10,1,false);
 				characters[0][3] = c;
 			}
 			if (column == 10 && row == 8) {
 				this.getChildren().add(rogueBlue);
-				c = new Rogue(true);
+				c = new Rogue(10,8,true);
 				characters[1][3] = c;
 			}
-
-//			if (c != null)
-//				turnHandler.addCharacter(c);
 		}
 
 		/**
@@ -462,7 +470,7 @@ public class Board extends Application {
 		}
 		
 		private void playAI() {
-			
+			AIUtil.AIUpdateBoard(characters, box);
 		}
 
 		/**

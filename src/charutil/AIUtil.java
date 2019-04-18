@@ -12,7 +12,7 @@ public class AIUtil {
 	public static void AIUpdateBoard(BaseCharacter[][] characters, Square[][] box)
 	{
 		Random rand = new Random();
-		int next = rand.nextInt(4);
+		int next = rand.nextInt(5);
 		BaseCharacter bc = characters[1][next];
 		Node[] choices = AIChoices(bc, characters[0], box);
 		
@@ -47,12 +47,13 @@ public class AIUtil {
 	
 	public static Node[] AIChoices(BaseCharacter attacker, BaseCharacter[] enemies, Square[][] box)
 	{
-		Node[] distances = new Node[4];
+		Node[] distances = new Node[5];
 		
 		for(int i = 0; i < distances.length; i++)
 		{
-			distances[i] = Dijkstra(attacker.getX(), attacker.getY(), box, 
-					enemies[i].getX(), enemies[i].getY());
+			BaseCharacter c = enemies[i];
+			Node n = Dijkstra(attacker.getX(), attacker.getY(), box, c.getX(), c.getY());
+			distances[i] = n;
 		}
 		
 		return distances;

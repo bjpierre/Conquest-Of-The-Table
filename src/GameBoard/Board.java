@@ -107,9 +107,9 @@ public class Board extends Application {
 		for (row = 0; row < 10; row++) {
 			for (column = 0; column < 15; column++) {
 				if (column == 7) {
-					game.add(box[row][column] = new Square(row, column, row, column), column, row);
+					game.add(box[row][column] = new Square(column, row, row, column), column, row);
 				} else {
-					game.add(box[row][column] = new Square(row, column, row, column), column, row);
+					game.add(box[row][column] = new Square(column, row, row, column), column, row);
 				}
 			}
 		}
@@ -146,7 +146,7 @@ public class Board extends Application {
 	 */
 	public void styleSquares(HashSet<Point> moves, String color) {
 		for (Point cords : moves) {
-			box[(int) cords.getX()][(int) cords.getY()].setStyle("-fx-border-color: " + color + "; ");
+			box[(int) cords.getY()][(int) cords.getX()].setStyle("-fx-border-color: " + color + "; ");
 		}
 
 	}
@@ -354,7 +354,6 @@ public class Board extends Application {
 						tempSquare.removeCharacter();
 						
 						c.setClicked(false);
-						c.setLoc(xloc, yloc);
 						
 						turnHandler.endTurn();
 					}
@@ -407,7 +406,7 @@ public class Board extends Application {
 		 */
 		public void removeCharacter() {
 			c = null;
-			this.getChildren().remove(this.getChildren().size()-1);
+			//this.getChildren().remove(this.getChildren().size()-1);
 		}
 		
 		public void addCharacter(BaseCharacter bc, Node sprite) {
@@ -418,7 +417,7 @@ public class Board extends Application {
 
 		public String toString()
 		{
-			return "(" + xloc + ", " + yloc + ", " + ((c == null) ? "null" : c.toString()) + ")";
+			return "(" + xloc + ", " + yloc + ")";
 		}
 	}
 

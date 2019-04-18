@@ -1,6 +1,5 @@
 package charutil;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -17,6 +16,32 @@ public class AIUtil {
 		BaseCharacter bc = characters[1][next];
 		Node[] choices = AIChoices(bc, characters[0], box);
 		
+		int min = choices[0].dist;
+		int loc = 0;
+		
+		//find closest
+		for(int i = 0; i < choices.length; i++)
+		{
+			if(min > choices[i].dist)
+			{
+				min = choices[i].dist;
+				loc = i;
+			}
+		}
+		
+		Node move = getNextMove(choices[loc]);
+		Square toMove = box[move.y][move.x];
+		Square fromMove = box[bc.getX()][bc.getY()];
+		if(toMove.getCharacter() == null)
+		{
+			//Just move
+			toMove.getChildren().add(fromMove.getChildren().get(fromMove.getChildren().size()-1));
+			fromMove.getChildren().remove(toMove.getChildren().get(toMove.getChildren().size()-1));
+		}
+		else
+		{
+			//Combat
+		}
 		
 	}
 	
@@ -87,6 +112,18 @@ public class AIUtil {
 		return null;
 	}
 
+	public static Node getNextMove(Node n)
+	{
+		Node cur = n;
+		Node prev = null;
+		while(cur.prev != null)
+		{
+			prev = cur;
+			cur = cur.prev;
+		}
+		
+		return prev;
+	}
 }
 
 class Node

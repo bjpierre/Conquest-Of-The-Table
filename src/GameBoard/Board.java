@@ -1,5 +1,6 @@
 package GameBoard;
 
+import GameBoard.characterImages;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -118,9 +119,9 @@ public class Board extends Application {
 		for (row = 0; row < 10; row++) {
 			for (column = 0; column < 15; column++) {
 				if (column == 7) {
-					game.add(box[row][column] = new Square(row, column, row, column), column, row);
+					game.add(box[row][column] = new Square(row, column, row, column, characters), column, row);
 				} else {
-					game.add(box[row][column] = new Square(row, column, row, column), column, row);
+					game.add(box[row][column] = new Square(row, column, row, column, characters), column, row);
 				}
 			}
 		}
@@ -164,23 +165,15 @@ public class Board extends Application {
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
-		private BaseCharacter c;
+		public BaseCharacter c;
 		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
-		private Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
-		private ImageView clericRed = new ImageView();
-		private Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
-		private ImageView rogueRed = new ImageView();
-		private Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
-		private ImageView clericBlue = new ImageView();
-		private Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
-		private ImageView rogueBlue = new ImageView();
 		private int grassPlace, pathPlace = 0;
 
 		// Used to create and update the board
-		public Square(int xloc, int yloc, int row, int column) {
+		public Square(int xloc, int yloc, int row, int column, BaseCharacter[][] characters) {
 			this.setXloc(xloc);
 			this.setYloc(yloc);
 
@@ -191,13 +184,11 @@ public class Board extends Application {
 
 			pathPlace = 1;
 
-			clericRed.setImage(clericRedImg);
 
-			rogueRed.setImage(rogueRedImg);
 
-			clericBlue.setImage(clericBlueImg);
 
-			rogueBlue.setImage(rogueBlueImg);
+
+
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
@@ -213,17 +204,10 @@ public class Board extends Application {
 			path.setPreserveRatio(true);
 
 
-			clericRed.setFitWidth(75);
-			clericRed.setPreserveRatio(true);
 
-			rogueRed.setFitWidth(75);
-			rogueRed.setPreserveRatio(true);
 
-			clericBlue.setFitWidth(75);
-			clericBlue.setPreserveRatio(true);
 
-			rogueBlue.setFitWidth(75);
-			rogueBlue.setPreserveRatio(true);
+
 
 			if (column != 7) {
 				this.getChildren().add(grass);
@@ -231,99 +215,11 @@ public class Board extends Application {
 				this.getChildren().add(path);
 			}
 
-			if ((column == 1 && row == 1) || (column == 13 && row == 1)) {
-				setKnight("red", row, column);
-			}
-			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
-				setKnight("blue", row, column);
-			}
-			if (column == 7 && row == 1) {
-				setWizard("red", row, column);
-			}
-			if (column == 7 && row == 8) {
-				setWizard("blue", row, column);
-			}
-			if (column == 4 && row == 1) {
-				this.getChildren().add(clericRed);
-				c = new Cleric(false);
-				characters[0][2] = c;
-			}
-			if (column == 4 && row == 8) {
-				this.getChildren().add(clericBlue);
-				c = new Cleric(true);
-				characters[1][2] = c;
-			}
-			if (column == 10 && row == 1) {
-				this.getChildren().add(rogueRed);
-				c = new Rogue(false);
-				characters[0][3] = c;
-			}
-			if (column == 10 && row == 8) {
-				this.getChildren().add(rogueBlue);
-				c = new Rogue(true);
-				characters[1][3] = c;
-			}
+			characterImages s = new characterImages(this,row,column,characters);
 
 //			if (c != null)
 //				turnHandler.addCharacter(c);
 		}
-
-		
-		
-		public void setKnight(String color, int row, int column)
-		{
-			if(color.compareTo("red") == 0)
-			{
-				Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
-				ImageView knightRed = new ImageView();
-				knightRed.setImage(knightRedImg);
-				knightRed.setFitWidth(75);
-				knightRed.setPreserveRatio(true);
-				this.getChildren().add(knightRed);
-				c = new Fighter(false);
-				characters[0][0] = c;
-			}
-			else if(color.compareTo("blue")==0)
-			{
-				Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
-				ImageView knightBlue = new ImageView();
-				knightBlue.setImage(knightBlueImg);
-				knightBlue.setFitWidth(75);
-				knightBlue.setPreserveRatio(true);
-				this.getChildren().add(knightBlue);
-				c = new Fighter(true);
-				characters[1][0] = c;
-			}
-		}
-		
-		public void setWizard(String color, int row, int column)
-		{
-			if(color.compareTo("red") == 0)
-			{
-				Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
-				ImageView wizardRed = new ImageView();
-				wizardRed.setImage(wizardRedImg);
-				wizardRed.setFitWidth(75);
-				wizardRed.setPreserveRatio(true);
-				this.getChildren().add(wizardRed);
-				c = new Wizard(false);
-				characters[0][1] = c;
-			}
-			else if(color.compareTo("blue")==0)
-			{
-				Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
-				ImageView wizardBlue = new ImageView();
-				wizardBlue.setImage(wizardBlueImg);
-				wizardBlue.setFitWidth(75);
-				wizardBlue.setPreserveRatio(true);
-				this.getChildren().add(wizardBlue);
-				c = new Wizard(true);
-				characters[1][1] = c;
-			}
-		}
-		
-		
-		
 		
 		/**
 		 * Handles the mouse event generated by clicking this tile

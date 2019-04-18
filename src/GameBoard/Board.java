@@ -255,7 +255,7 @@ public class Board extends Application {
 			}
 			if (column == 13 && row == 1) {
 				this.getChildren().add(knightRed);
-				c = new Fighter(1, 1, false);
+				c = new Fighter(13, 1, false);
 				characters[0][0] = c;
 			}
 			if (column == 1 && row == 8) {
@@ -275,7 +275,7 @@ public class Board extends Application {
 			}
 			if (column == 7 && row == 8) {
 				this.getChildren().add(wizardBlue);
-				c = new Wizard(7,1,true);
+				c = new Wizard(7,8,true);
 				characters[1][1] = c;
 			}
 			if (column == 4 && row == 1) {
@@ -347,7 +347,6 @@ public class Board extends Application {
 						setStyle("-fx-border-color: black;");
 		
 						//moves sprites
-						Square temp = tempSquare;
 						List<Node> l = tempSquare.getChildren();
 						Node sprite = l.get(l.size()-1);
 						this.addCharacter(tempSquare.c, sprite);
@@ -365,13 +364,14 @@ public class Board extends Application {
 							System.out.println("PLAYER " + (turnHandler.team ? 2 : 1) + " HITs");
 							if (connected)
 								connection.sendRemoveCharacter(this);
+							removeCharacter();
+							this.getChildren().remove(this.getChildren().size()-1);
 						}
 						else
 						{
 							System.out.println("PLAYER " + (turnHandler.team ? 2 : 1) + " MISSes");
 						}
 						
-						removeCharacter();
 						styleSquares(moves, "black");
 						tempSquare.c.setClicked(false);
 						turnHandler.endTurn();

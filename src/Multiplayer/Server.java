@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.Vector;
 
 
+
 /**
  * Handles multiplayer interactions
  * @author Ben Pierre
@@ -64,20 +65,21 @@ public class Server {
      * @param id player to be removed
      */
     public static void removeUser(int id) {
-    	for(Player ply : PlayerList) {
-    		if(ply.getID()== id) {
-    			try {
-					ply.dis.close();
-	    			ply.dos.close();
-	    			ply.s.close();
-	    			ply.stop();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-    			PlayerList.remove(ply);
-    		}
-    	}
-    }
+		Player ply = PlayerList.get(id);
+		if (ply.getID() == id) {
+			try {
+				Server.id--;
+				ply.stop();
+				ply.dis.close();
+				ply.dos.close();
+				ply.s.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			PlayerList.remove(ply);
+		}
+
+	}
     
     /**
      * Gets number of players currently connected to the server

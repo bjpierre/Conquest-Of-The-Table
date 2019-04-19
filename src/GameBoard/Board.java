@@ -1,9 +1,6 @@
 package GameBoard;
 
-import GameBoard.characterImages;
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.util.HashSet;
 import java.util.List;
 
@@ -12,21 +9,17 @@ import javax.swing.JOptionPane;
 import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
-<<<<<<< src/GameBoard/Board.java
-=======
 import character.Cleric;
 import character.Fighter;
 import character.Rogue;
 import character.Wizard;
 import charutil.AIUtil;
->>>>>>> src/GameBoard/Board.java
 import charutil.CharacterAndBoardUtil;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -43,10 +36,6 @@ public class Board extends Application {
 
 	Button restart;
 
-	Label text;
-	
-	String old;
-	
 	/**
 	 * Temp variable to track moving a unit
 	 */
@@ -68,13 +57,7 @@ public class Board extends Application {
 	 */
 	protected turnHandler turnHandler;
 	
-<<<<<<< src/GameBoard/Board.java
-	public double sceneH;
-		
-	public double sceneW;
-=======
 	protected Boolean clientTeam;
->>>>>>> src/GameBoard/Board.java
 
 	public static void main(String[] args) {
 		launch(args);
@@ -82,18 +65,8 @@ public class Board extends Application {
 
 	@Override
 	public void start(Stage stage) {
-<<<<<<< src/GameBoard/Board.java
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		sceneH = screenSize.getHeight();
-		sceneW = screenSize.getWidth();
-		
-		//those in the first row are team 1, second team 2
-		characters = new BaseCharacter[2][4];
-=======
 		//those in the first row are team 1, second team 2
 		characters = new BaseCharacter[2][5];
->>>>>>> src/GameBoard/Board.java
 		
 		connected = bootMultiplayer();
 		
@@ -101,8 +74,8 @@ public class Board extends Application {
 		turnHandler = new turnHandler(false, VsPlayerPrompt());
 
 		border = new BorderPane();
-		Scene scene = new Scene(border, sceneW, sceneH);
-		
+		Scene scene = new Scene(border, 1500, 1000);
+
 		restart = new Button("Restart Game");
 		restart.setPadding(new Insets(10, 10, 10, 10));
 		restart.setOnAction(e -> {
@@ -121,12 +94,6 @@ public class Board extends Application {
 				connection.leaveServer();
 
 		});
-<<<<<<< src/GameBoard/Board.java
-		
-		stage.setFullScreen(true);
-
-=======
->>>>>>> src/GameBoard/Board.java
 	}
 
 	/**
@@ -142,14 +109,6 @@ public class Board extends Application {
 		return response == JOptionPane.YES_OPTION;
 	}
 
-	
-	public void setText(String t)
-	{
-		text = new Label(t);
-		text.setPadding(new Insets(10, 10, 10, 10));
-		this.border.setBottom(text);
-	}
-	
 	/**
 	 * Rebuilds the board to the default state
 	 */
@@ -159,23 +118,15 @@ public class Board extends Application {
 		for (row = 0; row < 10; row++) {
 			for (column = 0; column < 15; column++) {
 				if (column == 7) {
-<<<<<<< src/GameBoard/Board.java
-					game.add(box[row][column] = new Square(row, column, row, column, characters), column, row);
-				} else {
-					game.add(box[row][column] = new Square(row, column, row, column, characters), column, row);
-=======
 					game.add(box[row][column] = new Square(column, row, row, column), column, row);
 				} else {
 					game.add(box[row][column] = new Square(column, row, row, column), column, row);
->>>>>>> src/GameBoard/Board.java
 				}
 			}
 		}
 
 		border.setRight(restart);
 		border.setCenter(game);
-		old = "Start!";
-		setText(old);
 		moveCharacter = false; // Selecting Character
 		tempSquare = null; // No square being moved ATM
 
@@ -223,15 +174,31 @@ public class Board extends Application {
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
-		public BaseCharacter c;
+		private BaseCharacter c;
 		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
+		private Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
+		private ImageView knightRed = new ImageView();
+		private Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
+		private ImageView wizardRed = new ImageView();
+		private Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
+		private ImageView clericRed = new ImageView();
+		private Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
+		private ImageView rogueRed = new ImageView();
+		private Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
+		private ImageView knightBlue = new ImageView();
+		private Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
+		private ImageView wizardBlue = new ImageView();
+		private Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
+		private ImageView clericBlue = new ImageView();
+		private Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
+		private ImageView rogueBlue = new ImageView();
 		private int grassPlace, pathPlace = 0;
 
 		// Used to create and update the board
-		public Square(int xloc, int yloc, int row, int column, BaseCharacter[][] characters) {
+		public Square(int xloc, int yloc, int row, int column) {
 			this.setXloc(xloc);
 			this.setYloc(yloc);
 
@@ -242,22 +209,32 @@ public class Board extends Application {
 
 			pathPlace = 1;
 
+			knightRed.setImage(knightRedImg);
+
+			wizardRed.setImage(wizardRedImg);
+
+			clericRed.setImage(clericRedImg);
+
+			rogueRed.setImage(rogueRedImg);
+
+			knightBlue.setImage(knightBlueImg);
+
+			wizardBlue.setImage(wizardBlueImg);
+
+			clericBlue.setImage(clericBlueImg);
+
+			rogueBlue.setImage(rogueBlueImg);
+
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(76, 76);
 			this.setOnMouseClicked(e -> mouseEvent());
-			this.setOnMouseEntered(e -> mouseHover());
+
 			// movesTile.setFitWidth(99);
 			// movesTile.setPreserveRatio(true);
 
 			grass.setFitWidth(75);
 			grass.setPreserveRatio(true);
-<<<<<<< src/GameBoard/Board.java
-	
-			path.setFitWidth(75);
-			path.setPreserveRatio(true);
-
-=======
 
 			path.setFitWidth(75);
 			path.setPreserveRatio(true);
@@ -286,19 +263,12 @@ public class Board extends Application {
 			rogueBlue.setFitWidth(75);
 			rogueBlue.setPreserveRatio(true);
 
->>>>>>> src/GameBoard/Board.java
 			if (column != 7) {
 				this.getChildren().add(grass);
 			} else {
 				this.getChildren().add(path);
 			}
 
-<<<<<<< src/GameBoard/Board.java
-			characterImages s = new characterImages(this,row,column,characters);
-
-//			if (c != null)
-//				turnHandler.addCharacter(c);
-=======
 			if (column == 1 && row == 1) {
 				this.getChildren().add(knightRed);
 				c = new Fighter(1, 1, false);
@@ -348,20 +318,6 @@ public class Board extends Application {
 				this.getChildren().add(rogueBlue);
 				c = new Rogue(10,8,true);
 				characters[1][3] = c;
-			}
->>>>>>> src/GameBoard/Board.java
-		}
-
-		public void mouseHover()
-		{
-			if(this.c != null)
-			{
-				old = text.getText();
-				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName());
-			}
-			else
-			{
-				setText(old);
 			}
 		}
 
@@ -446,41 +402,13 @@ public class Board extends Application {
 						tempSquare.c.setClicked(false);
 						turnHandler.endTurn();
 					}
-<<<<<<< src/GameBoard/Board.java
-					turnHandler.endTurn();
 				}
 			}
-			// If character not selected
-			else if (c != null && !c.getClicked()) {
-				c.setClicked(true);
-				tempSquare = this;
-				styleSquares(moves, "yellow");
+		}
 
-				// if no character present and square clicked
-			} else if (c == null && tempSquare != null) {
+		public void setState() {
 
-				if (CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box).contains(here))
-				{
-					if (connected)
-						connection.sendCharacterMove(tempSquare, this);
-
-					styleSquares(CharacterAndBoardUtil.tempMoveList(tempSquare.getXloc(), tempSquare.getYloc(), box),
-							"black");
-					setStyle("-fx-border-color: black;");
-					this.c = tempSquare.c;
-
-					getChildren().add(tempSquare.getChildren().get(tempSquare.getChildren().size() - 1));
-					tempSquare.getChildren().remove(getChildren().get(getChildren().size() - 1));
-					c.setClicked(false);
-					tempSquare.c = null;
-					tempSquare = null;
-					turnHandler.endTurn();
-=======
->>>>>>> src/GameBoard/Board.java
-				}
-			}
-
-		}	
+		}
 
 		public BaseCharacter getCharacter() {
 			return c;

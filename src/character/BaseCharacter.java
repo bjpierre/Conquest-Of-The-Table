@@ -9,7 +9,7 @@ import item.Item;
 import item.Weapon;
 
 public class BaseCharacter {
-
+	
 	protected final int NUM_OF_STATS = 6;
 	protected Dice d20;
 	public static final int[] BASE_ARRAY = {10, 10, 10, 10, 10, 10};
@@ -28,6 +28,7 @@ public class BaseCharacter {
 	private boolean isSelected;
 	protected boolean team;
 	private int x, y;
+	public String name;
 	
 	public BaseCharacter(int hpDiceSides, Random r)
 	{
@@ -43,6 +44,7 @@ public class BaseCharacter {
 		rangeOfSpecial = 1;
 		hpDice = new Dice(hpDiceSides, r);
 		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
+		name = getStringName();
 	}
 	
 	protected BaseCharacter(int hpDiceSides, int SpecialRange, boolean team)
@@ -105,6 +107,11 @@ public class BaseCharacter {
 	public int getMove()
 	{
 		return move;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public int getAC()
@@ -199,5 +206,18 @@ public class BaseCharacter {
 	public int getY()
 	{
 		return y;
+	}
+	
+	private String getStringName()
+	{	
+		String [] names;
+		names = new String[] { "Liam", "Noah", "Sam", "Nate", "Bob", "Pat", "Pete",
+			"Conor", "Ben", "Tyler", "Evan", "William", "Elijah", "Oliver", "Jacob",
+			"Michael", "Alexander", "Lucas", "Daniel", "Matthew", "Henry", "Owen", 
+			"John", "Gabriel", "Luke", "Anthony", "Isaac", "Jack", "Levi", "Ryan"
+		};
+		Random ran = new Random();
+		int t = ran.nextInt(30);
+		return names[t];
 	}
 }

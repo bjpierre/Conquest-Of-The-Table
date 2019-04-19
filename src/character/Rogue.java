@@ -16,9 +16,9 @@ public class Rogue extends BaseCharacter {
 		sneakAtkNum = 1;
 	}
 	
-	public Rogue(boolean team)
+	public Rogue(int x, int y, boolean team)
 	{
-		super(8,1, team);
+		super(8,1, x, y, team);
 	}
 	
 	public Rogue(int[] givenStats, boolean team)

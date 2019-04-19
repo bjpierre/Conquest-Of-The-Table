@@ -46,9 +46,9 @@ public class BaseCharacter {
 		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
 	}
 	
-	protected BaseCharacter(int hpDiceSides, int SpecialRange, boolean team)
+	protected BaseCharacter(int hpDiceSides, int SpecialRange, int x, int y, boolean team)
 	{
-		this(BASE_ARRAY, hpDiceSides, SpecialRange, 0, 0, team);
+		this(BASE_ARRAY, hpDiceSides, SpecialRange, x, y, team);
 	}
 	
 	protected BaseCharacter(int[] givenStats, int hpDiceSides, int specialRange, int x, int y, boolean team)
@@ -208,6 +208,12 @@ public class BaseCharacter {
 		return y;
 	}
 	
+		public void setLoc(int newX, int newY)
+	{
+		x = newX;
+		y = newY;
+	}
+	
 	private String getStringName()
 	{	
 		String [] names;
@@ -220,4 +226,5 @@ public class BaseCharacter {
 		int t = ran.nextInt(30);
 		return names[t];
 	}
+	
 }

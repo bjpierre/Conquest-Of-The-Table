@@ -23,6 +23,7 @@ class characterHandlertests {
 		assertEquals(demo.getY(),-1);
 		assertFalse(demo.getClicked());
 	}
+<<<<<<< src/UnitTests/characterHandlertests.java
 	
 	@Test
 	void testSetersAndGetters() {
@@ -40,4 +41,6 @@ class characterHandlertests {
 		assertEquals(demo.getY(),1);
 	}
 
+=======
+>>>>>>> src/UnitTests/characterHandlertests.java
 }

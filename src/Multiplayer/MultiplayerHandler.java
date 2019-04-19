@@ -17,14 +17,15 @@ import javafx.application.Platform;
  * @author Ben Pierre
  */
 public class MultiplayerHandler {
-	InetAddress ip;
-	Socket socket;
-	DataInputStream dis;
-	DataOutputStream dos;
-	int id;
+	private InetAddress ip;
+	private Socket socket;
+	private DataInputStream dis;
+	private DataOutputStream dos;
+	private int id;
 	private Square[][] board;
 	private Thread readMessage;
 	private Board gameBoard;
+	private Boolean team;
 
 	/**
 	 * Creates and handles a connection to a multiplayer server
@@ -111,7 +112,9 @@ public class MultiplayerHandler {
 									recieveRemoveCharacter(msg);
 								}
 							});
-						} else {
+						} else if(msg.startsWith("ToggleTurn")) {
+							receiveToggleTurn();
+						}else{
 							System.out.println(msg);
 						}
 					} catch (IOException e) {
@@ -219,8 +222,8 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendCharacterMove(Square from, Square to) {
 		try {
-			sendMessage("Move-" + (from.getXloc()) + "-" + (from.getYloc()) + "-" + (to.getXloc()) + "-"
-					+ (to.getYloc()) + "..");
+			sendMessage("Move-" + (from.getYloc()) + "-" + (from.getXloc()) + "-" + (to.getYloc()) + "-"
+					+ (to.getXloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;
@@ -259,7 +262,7 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendRemoveCharacter(Square square) {
 		try {
-			sendMessage("RemoveCharacter-" + (square.getXloc()) + "-" + (square.getYloc()) + "..");
+			sendMessage("RemoveCharacter-" + (square.getYloc()) + "-" + (square.getXloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;
@@ -280,5 +283,22 @@ public class MultiplayerHandler {
 		Square square = board[Integer.parseInt(sc.next())][Integer.parseInt(sc.next())];
 		square.removeCharacter();
 	}
+
+	/**
+	 * Gets the team to be used
+	 * @return True for blue, red for false - I believe
+	 */
+	public Boolean getTeam() {
+		return id%2==0;
+	}
+	
+	public void sendToggleTurn() {
+		sendMessage("ToggleTurn-..");
+	}
+	
+	public void receiveToggleTurn() {
+		gameBoard.getTurnHandler().endTurnMultiplayer();;
+	}
+
 
 }

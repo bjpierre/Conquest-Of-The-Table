@@ -9,16 +9,15 @@ public class Fighter extends BaseCharacter {
 		super(10, rand);
 	}
 	
-	public Fighter(boolean team)
+	public Fighter(int x, int y, boolean team)
 	{
-		super(10,1, team);
+		super(10,1, x, y, team);
 	}
 	
 	public Fighter(int[] givenStats, boolean team) 
 	{
 		this(givenStats, 0, 0, team);
 	}
-	
 	public Fighter(int[] givenStats, int x, int y, boolean team)
 	{
 		super(givenStats, 10, 1, x, y, team);

@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import GameBoard.Board;
@@ -25,7 +24,6 @@ public class MultiplayerHandler {
 	private Square[][] board;
 	private Thread readMessage;
 	private Board gameBoard;
-	private Boolean team;
 
 	/**
 	 * Creates and handles a connection to a multiplayer server
@@ -222,8 +220,8 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendCharacterMove(Square from, Square to) {
 		try {
-			sendMessage("Move-" + (from.getYloc()) + "-" + (from.getXloc()) + "-" + (to.getYloc()) + "-"
-					+ (to.getXloc()) + "..");
+			sendMessage("Move-" + (from.getXloc()) + "-" + (from.getYloc()) + "-" + (to.getXloc()) + "-"
+					+ (to.getYloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;
@@ -249,7 +247,7 @@ public class MultiplayerHandler {
 
 		to.getChildren().add(from.getChildren().get(from.getChildren().size() - 1));
 		from.getChildren().remove(to.getChildren().get(to.getChildren().size() - 1));
-
+		sc.close();
 		return true;
 	}
 
@@ -262,7 +260,7 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendRemoveCharacter(Square square) {
 		try {
-			sendMessage("RemoveCharacter-" + (square.getYloc()) + "-" + (square.getXloc()) + "..");
+			sendMessage("RemoveCharacter-" + (square.getXloc()) + "-" + (square.getYloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;
@@ -282,6 +280,7 @@ public class MultiplayerHandler {
 		sc.next();
 		Square square = board[Integer.parseInt(sc.next())][Integer.parseInt(sc.next())];
 		square.removeCharacter();
+		sc.close();
 	}
 
 	/**

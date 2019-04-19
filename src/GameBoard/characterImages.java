@@ -1,6 +1,5 @@
 package GameBoard;
 
-import GameBoard.Board;
 import GameBoard.Board.Square;
 import character.BaseCharacter;
 import character.Cleric;

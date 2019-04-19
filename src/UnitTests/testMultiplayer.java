@@ -3,8 +3,6 @@ package UnitTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.junit.jupiter.api.Test;

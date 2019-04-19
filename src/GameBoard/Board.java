@@ -12,10 +12,6 @@ import javax.swing.JOptionPane;
 import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
-import character.Cleric;
-import character.Fighter;
-import character.Rogue;
-import character.Wizard;
 import charutil.AIUtil;
 import charutil.CharacterAndBoardUtil;
 import javafx.application.Application;
@@ -210,7 +206,7 @@ public class Board extends Application {
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
-		private int grassPlace, pathPlace = 0;
+		private Boolean grassPlace, pathPlace = false;
 
 		// Used to create and update the board
 		public Square(int xloc, int yloc, int row, int column, BaseCharacter[][] characters) {
@@ -218,11 +214,11 @@ public class Board extends Application {
 			this.setYloc(yloc);
 
 			grass.setImage(grassImg);
-			grassPlace = 1;
+			grassPlace = true;
 
 			path.setImage(pathImg);
 
-			pathPlace = 1;
+			pathPlace = true;
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
@@ -372,6 +368,16 @@ public class Board extends Application {
 		public String toString() {
 			return "(" + xloc + ", " + yloc + ")";
 		}
+
+		public Boolean getGrassPlace() {
+			return grassPlace;
+		}
+
+
+		public Boolean getPathPlace() {
+			return pathPlace;
+		}
+
 	}
 
 	/**

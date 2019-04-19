@@ -112,7 +112,9 @@ public class MultiplayerHandler {
 									recieveRemoveCharacter(msg);
 								}
 							});
-						} else {
+						} else if(msg.startsWith("ToggleTurn")) {
+							receiveToggleTurn();
+						}else{
 							System.out.println(msg);
 						}
 					} catch (IOException e) {
@@ -288,6 +290,14 @@ public class MultiplayerHandler {
 	 */
 	public Boolean getTeam() {
 		return id%2==0;
+	}
+	
+	public void sendToggleTurn() {
+		sendMessage("ToggleTurn-..");
+	}
+	
+	public void receiveToggleTurn() {
+		gameBoard.getTurnHandler().endTurnMultiplayer();;
 	}
 
 

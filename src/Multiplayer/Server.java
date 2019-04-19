@@ -136,7 +136,7 @@ class Player implements Runnable {
 				}else if(received.startsWith("Restart")) {
 					//System.out.println("Restarting");
 					Server.broadcast(received, s);
-				}else Server.broadcast(received, s);
+				}else {Server.broadcast(received, s);System.out.println("toggling turn");};
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

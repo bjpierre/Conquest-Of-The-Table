@@ -163,6 +163,14 @@ public class Board extends Application {
 		}
 
 	}
+	
+	/**
+	 * Gets a turn handler
+	 * @return the turn handler
+	 */
+	public turnHandler getTurnHandler() {
+		return turnHandler;
+	}
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
@@ -497,9 +505,15 @@ public class Board extends Application {
 
 		}
 
+		public void endTurnMultiplayer() {
+			team = !team;
+			tempSquare = null;
+		}
+		
 		public void endTurn() {
 			team = !team;
 			tempSquare = null;
+			if(connected) connection.sendToggleTurn();
 			if(vsAI && team == true)
 				playAI();
 		}

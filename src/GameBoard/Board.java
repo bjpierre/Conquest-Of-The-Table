@@ -228,6 +228,7 @@ public class Board extends Application {
 			// movesTile.setFitWidth(99);
 			// movesTile.setPreserveRatio(true);
 
+			
 			grass.setFitWidth(75);
 			grass.setPreserveRatio(true);
 
@@ -250,7 +251,7 @@ public class Board extends Application {
 		public void mouseHover() {
 			if (this.c != null) {
 				old = text.getText();
-				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName());
+				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName() + " the " + c.getClass().getSimpleName());
 			} else {
 				setText(old);
 			}

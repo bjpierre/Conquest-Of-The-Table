@@ -329,7 +329,7 @@ public class Board extends Application {
 			HashSet<Point> moves;
 			Point here = new Point(xloc, yloc);
 			
-			if(!turnHandler.vsAI && turnHandler.team == clientTeam) {
+			if(clientTeam!=null && !turnHandler.vsAI && turnHandler.team == clientTeam) {
 				return;
 			}
 			

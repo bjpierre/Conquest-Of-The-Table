@@ -222,8 +222,8 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendCharacterMove(Square from, Square to) {
 		try {
-			sendMessage("Move-" + (from.getXloc()) + "-" + (from.getYloc()) + "-" + (to.getXloc()) + "-"
-					+ (to.getYloc()) + "..");
+			sendMessage("Move-" + (from.getYloc()) + "-" + (from.getXloc()) + "-" + (to.getYloc()) + "-"
+					+ (to.getXloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;
@@ -262,7 +262,7 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendRemoveCharacter(Square square) {
 		try {
-			sendMessage("RemoveCharacter-" + (square.getXloc()) + "-" + (square.getYloc()) + "..");
+			sendMessage("RemoveCharacter-" + (square.getYloc()) + "-" + (square.getXloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;

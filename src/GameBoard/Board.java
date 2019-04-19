@@ -263,6 +263,7 @@ public class Board extends Application {
 			HashSet<Point> moves;
 			Point here = new Point(xloc, yloc);
 
+			//if multiplayer engaged and its not our turn do nothing
 			if (clientTeam != null && !turnHandler.vsAI && turnHandler.team == clientTeam) {
 				return;
 			}

@@ -44,7 +44,6 @@ public class BaseCharacter {
 		rangeOfSpecial = 1;
 		hpDice = new Dice(hpDiceSides, r);
 		hp = hpDice.roll() + mods[AbilityScore.con.ordinal()];
-		name = getStringName();
 	}
 	
 	protected BaseCharacter(int hpDiceSides, int SpecialRange, boolean team)
@@ -72,6 +71,7 @@ public class BaseCharacter {
 		this.x = x;
 		this.y = y;
 		this.team = team;
+		this.name = getStringName();
 	}
 	
 	public int rollInit()

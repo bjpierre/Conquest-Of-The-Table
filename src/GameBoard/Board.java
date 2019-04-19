@@ -226,7 +226,7 @@ public class Board extends Application {
 			if(this.c != null)
 			{
 				old = text.getText();
-				setText("HP: " + this.c.getHP() + " Name: " + this.c.name);
+				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName());
 			}
 			else
 			{

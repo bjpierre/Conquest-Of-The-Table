@@ -50,7 +50,7 @@ public class characterImages{
 			knightRed.setFitWidth(75);
 			knightRed.setPreserveRatio(true);
 			s.getChildren().add(knightRed);
-			s.c = new Fighter(false);
+			s.c = new Fighter(row,column,false);
 			characters[0][0] = s.c;
 		}
 		else if(color.compareTo("blue")==0)
@@ -61,7 +61,7 @@ public class characterImages{
 			knightBlue.setFitWidth(75);
 			knightBlue.setPreserveRatio(true);
 			s.getChildren().add(knightBlue);
-			s.c = new Fighter(true);
+			s.c = new Fighter(row,column,true);
 			characters[1][0] = s.c;
 		}
 	}
@@ -76,7 +76,7 @@ public class characterImages{
 			wizardRed.setFitWidth(75);
 			wizardRed.setPreserveRatio(true);
 			s.getChildren().add(wizardRed);
-			s.c = new Wizard(false);
+			s.c = new Wizard(row,column,false);
 			characters[0][1] = s.c;
 		}
 		else if(color.compareTo("blue")==0)
@@ -87,7 +87,7 @@ public class characterImages{
 			wizardBlue.setFitWidth(75);
 			wizardBlue.setPreserveRatio(true);
 			s.getChildren().add(wizardBlue);
-			s.c = new Wizard(true);
+			s.c = new Wizard(row,column,true);
 			characters[1][1] = s.c;
 		}
 	}
@@ -102,7 +102,7 @@ public class characterImages{
 			clericRed.setFitWidth(75);
 			clericRed.setPreserveRatio(true);
 			s.getChildren().add(clericRed);
-			s.c = new Cleric(false);
+			s.c = new Cleric(row,column,false);
 			characters[0][2] = s.c;
 		}
 		else if(color.compareTo("blue")==0)
@@ -113,7 +113,7 @@ public class characterImages{
 			clericBlue.setFitWidth(75);
 			clericBlue.setPreserveRatio(true);
 			s.getChildren().add(clericBlue);
-			s.c = new Cleric(true);
+			s.c = new Cleric(row,column,true);
 			characters[1][2] = s.c;
 		}
 	}
@@ -128,7 +128,7 @@ public class characterImages{
 			rogueRed.setFitWidth(75);
 			rogueRed.setPreserveRatio(true);
 			s.getChildren().add(rogueRed);
-			s.c = new Rogue(false);
+			s.c = new Rogue(row,column,false);
 			characters[0][3] = s.c;
 		}
 		else if(color.compareTo("blue")==0)
@@ -139,7 +139,7 @@ public class characterImages{
 			rogueBlue.setFitWidth(75);
 			rogueBlue.setPreserveRatio(true);
 			s.getChildren().add(rogueBlue);
-			s.c = new Rogue(true);
+			s.c = new Rogue(row,column,true);
 			characters[1][3] = s.c;
 		}
 	}

@@ -2,12 +2,10 @@ package UnitTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.Point;
 
 import org.junit.jupiter.api.Test;
 
 import Multiplayer.CharacterHandler;
-import character.Fighter;
 
 class characterHandlertests {
 
@@ -23,6 +21,4 @@ class characterHandlertests {
 		assertEquals(demo.getY(),-1);
 		assertFalse(demo.getClicked());
 	}
-	
-
 }

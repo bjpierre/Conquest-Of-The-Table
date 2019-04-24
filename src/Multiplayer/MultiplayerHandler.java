@@ -110,9 +110,12 @@ public class MultiplayerHandler {
 									recieveRemoveCharacter(msg);
 								}
 							});
-						} else {
+						} else if(msg.startsWith("ToggleTurn")) {
+							receiveToggleTurn();
+						}else{
 							System.out.println(msg);
 						}
+
 					} catch (IOException e) {
 
 						e.printStackTrace();
@@ -218,8 +221,8 @@ public class MultiplayerHandler {
 	 */
 	public boolean sendCharacterMove(Square from, Square to) {
 		try {
-			sendMessage("Move-" + (from.getXloc()) + "-" + (from.getYloc()) + "-" + (to.getXloc()) + "-"
-					+ (to.getYloc()) + "..");
+			sendMessage("Move-" + (from.getYloc()) + "-" + (from.getXloc()) + "-" + (to.getYloc()) + "-"
+					+ (to.getXloc()) + "..");
 		} catch (Exception e) {
 			System.out.println("Error moving Character");
 			return false;

@@ -16,11 +16,11 @@ import javafx.application.Platform;
  * @author Ben Pierre
  */
 public class MultiplayerHandler {
-	private InetAddress ip;
-	private Socket socket;
-	private DataInputStream dis;
-	private DataOutputStream dos;
-	private int id;
+	InetAddress ip;
+	Socket socket;
+	DataInputStream dis;
+	DataOutputStream dos;
+	int id;
 	private Square[][] board;
 	private Thread readMessage;
 	private Board gameBoard;
@@ -110,9 +110,7 @@ public class MultiplayerHandler {
 									recieveRemoveCharacter(msg);
 								}
 							});
-						} else if(msg.startsWith("ToggleTurn")) {
-							receiveToggleTurn();
-						}else{
+						} else {
 							System.out.println(msg);
 						}
 					} catch (IOException e) {
@@ -283,10 +281,7 @@ public class MultiplayerHandler {
 		sc.close();
 	}
 
-	/**
-	 * Gets the team to be used
-	 * @return True for blue, red for false - I believe
-	 */
+	
 	public Boolean getTeam() {
 		return id%2==0;
 	}
@@ -296,8 +291,7 @@ public class MultiplayerHandler {
 	}
 	
 	public void receiveToggleTurn() {
-		gameBoard.getTurnHandler().endTurnMultiplayer();;
+		gameBoard.getTurnHandler().endTurnMultiplayer();
 	}
-
 
 }

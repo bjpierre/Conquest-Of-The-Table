@@ -9,7 +9,7 @@ import item.Item;
 import item.Weapon;
 
 public class BaseCharacter {
-	
+
 	protected final int NUM_OF_STATS = 6;
 	protected Dice d20;
 	public static final int[] BASE_ARRAY = {10, 10, 10, 10, 10, 10};
@@ -109,11 +109,6 @@ public class BaseCharacter {
 		return move;
 	}
 	
-	public String getName()
-	{
-		return name;
-	}
-	
 	public int getAC()
 	{
 		return ac;
@@ -208,12 +203,11 @@ public class BaseCharacter {
 		return y;
 	}
 	
-		public void setLoc(int newX, int newY)
+	public void setLoc(int newX, int newY)
 	{
 		x = newX;
 		y = newY;
 	}
-	
 	private String getStringName()
 	{	
 		String [] names;
@@ -227,4 +221,9 @@ public class BaseCharacter {
 		return names[t];
 	}
 	
+	public String getName()
+	{
+		return name;
+	}
+
 }

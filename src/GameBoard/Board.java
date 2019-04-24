@@ -1,6 +1,5 @@
 package GameBoard;
 
-import GameBoard.characterImages;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -12,6 +11,10 @@ import javax.swing.JOptionPane;
 import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
 import character.BaseCharacter;
+import character.Cleric;
+import character.Fighter;
+import character.Rogue;
+import character.Wizard;
 import charutil.AIUtil;
 import charutil.CharacterAndBoardUtil;
 import javafx.application.Application;
@@ -36,14 +39,14 @@ public class Board extends Application {
 
 	Button restart;
 
-	Label text;
-
 	String old;
 
 	/**
 	 * Temp variable to track moving a unit
 	 */
 	protected Boolean moveCharacter;
+
+	Label text;
 
 	protected Square tempSquare;
 
@@ -60,12 +63,14 @@ public class Board extends Application {
 	 * Local class to handle turns
 	 */
 	protected turnHandler turnHandler;
+	/**
+	 * Represents the team Variable
+	 */
+	protected Boolean clientTeam;
 
 	public double sceneH;
 
 	public double sceneW;
-
-	protected Boolean clientTeam;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -81,12 +86,20 @@ public class Board extends Application {
 		// those in the first row are team 1, second team 2
 		characters = new BaseCharacter[2][5];
 
-		connected = bootMultiplayer();
+		Boolean connect = VsPlayerPrompt("Would you like to play multiplayer?");
+		if (connect)
+			connected = bootMultiplayer();
+		else
+			connected = false;
+
+		if (!connect) {
+			turnHandler = new turnHandler(false, VsPlayerPrompt("Would you like to vs AI?"));
+		} else
+			turnHandler = new turnHandler(false, false);
 
 		if (clientTeam != null) {
 			System.out.println("You are representing team " + (clientTeam ? "blue!" : "red!"));
 		}
-		turnHandler = new turnHandler(false, VsPlayerPrompt());
 
 		border = new BorderPane();
 		Scene scene = new Scene(border, sceneW, sceneH);
@@ -111,7 +124,6 @@ public class Board extends Application {
 		});
 
 		stage.setFullScreen(true);
-
 	}
 
 	/**
@@ -121,16 +133,15 @@ public class Board extends Application {
 		buildBoard();
 	}
 
-	public Boolean VsPlayerPrompt() {
-		int response = JOptionPane.showConfirmDialog(null, "Would you like to play against AI?", "Mode Select",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+	/**
+	 * Creates a prompt to see if the user wants to play vs a player or ai
+	 * 
+	 * @return
+	 */
+	public Boolean VsPlayerPrompt(String str) {
+		int response = JOptionPane.showConfirmDialog(null, str, "Mode Select", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
 		return response == JOptionPane.YES_OPTION;
-	}
-
-	public void setText(String t) {
-		text = new Label(t);
-		text.setPadding(new Insets(10, 10, 10, 10));
-		this.border.setBottom(text);
 	}
 
 	/**
@@ -142,9 +153,9 @@ public class Board extends Application {
 		for (row = 0; row < 10; row++) {
 			for (column = 0; column < 15; column++) {
 				if (column == 7) {
-					game.add(box[row][column] = new Square(row, column, row, column, characters), column, row);
+					game.add(box[row][column] = new Square(column, row, row, column), column, row);
 				} else {
-					game.add(box[row][column] = new Square(row, column, row, column, characters), column, row);
+					game.add(box[row][column] = new Square(column, row, row, column), column, row);
 				}
 			}
 		}
@@ -153,9 +164,20 @@ public class Board extends Application {
 		border.setCenter(game);
 		old = "Start!";
 		setText(old);
+
 		moveCharacter = false; // Selecting Character
 		tempSquare = null; // No square being moved ATM
 
+	}
+
+	public GameBoard.Board.turnHandler getTurnHandler() {
+		return turnHandler;
+	}
+
+	public void setText(String t) {
+		text = new Label(t);
+		text.setPadding(new Insets(10, 10, 10, 10));
+		this.border.setBottom(text);
 	}
 
 	/**
@@ -173,6 +195,7 @@ public class Board extends Application {
 			System.out.println("Unable to connect to server");
 			return false;
 		}
+
 	}
 
 	/**
@@ -185,18 +208,9 @@ public class Board extends Application {
 	 */
 	public void styleSquares(HashSet<Point> moves, String color) {
 		for (Point cords : moves) {
-			box[(int) cords.getX()][(int) cords.getY()].setStyle("-fx-border-color: " + color + "; ");
+			box[(int) cords.getY()][(int) cords.getX()].setStyle("-fx-border-color: " + color + "; ");
 		}
 
-	}
-
-	/**
-	 * Gets a turn handler
-	 * 
-	 * @return the turn handler
-	 */
-	public turnHandler getTurnHandler() {
-		return turnHandler;
 	}
 
 	public class Square extends StackPane {
@@ -206,29 +220,23 @@ public class Board extends Application {
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
-		private Boolean grassPlace, pathPlace = false;
-
 		// Used to create and update the board
-		public Square(int xloc, int yloc, int row, int column, BaseCharacter[][] characters) {
+		public Square(int xloc, int yloc, int row, int column) {
 			this.setXloc(xloc);
 			this.setYloc(yloc);
 
 			grass.setImage(grassImg);
-			grassPlace = true;
-
 			path.setImage(pathImg);
-
-			pathPlace = true;
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(76, 76);
 			this.setOnMouseClicked(e -> mouseEvent());
 			this.setOnMouseEntered(e -> mouseHover());
+
 			// movesTile.setFitWidth(99);
 			// movesTile.setPreserveRatio(true);
 
-			
 			grass.setFitWidth(75);
 			grass.setPreserveRatio(true);
 
@@ -241,17 +249,99 @@ public class Board extends Application {
 				this.getChildren().add(path);
 			}
 
-			@SuppressWarnings("unused")
-			characterImages s = new characterImages(this, row, column, characters);
+			if ((column == 1 && row == 1)||(column == 13 && row == 1)) {
+				Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
+				ImageView knightRed = new ImageView();
+				knightRed.setImage(knightRedImg);
+				knightRed.setFitWidth(75);
+				knightRed.setPreserveRatio(true);
+				this.getChildren().add(knightRed);
+				c = new Fighter(1, 1, false);
+				characters[0][(column==1?4:0)] = c;
+			}
 
-			// if (c != null)
-			// turnHandler.addCharacter(c);
+			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
+				Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
+				ImageView knightBlue = new ImageView();
+				knightBlue.setImage(knightBlueImg);
+				knightBlue.setFitWidth(75);
+				knightBlue.setPreserveRatio(true);
+
+				this.getChildren().add(knightBlue);
+				c = new Fighter(1, 8, true);
+				characters[1][(column==1?0:4)] = c;
+			}
+			if (column == 7 && row == 1) {
+				Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
+				ImageView wizardRed = new ImageView();
+				wizardRed.setImage(wizardRedImg);
+				wizardRed.setFitWidth(75);
+				wizardRed.setPreserveRatio(true);
+				this.getChildren().add(wizardRed);
+				c = new Wizard(7, 1, false);
+				characters[0][1] = c;
+			}
+			if (column == 7 && row == 8) {
+				Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
+				ImageView wizardBlue = new ImageView();
+				wizardBlue.setFitWidth(75);
+				wizardBlue.setPreserveRatio(true);
+				wizardBlue.setImage(wizardBlueImg);
+				
+				this.getChildren().add(wizardBlue);
+				c = new Wizard(7, 8, true);
+				characters[1][1] = c;
+			}
+			if (column == 4 && row == 1) {
+				Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
+				ImageView clericRed = new ImageView();
+				clericRed.setFitWidth(75);
+				clericRed.setPreserveRatio(true);
+				clericRed.setImage(clericRedImg);
+				
+				this.getChildren().add(clericRed);
+				c = new Cleric(4, 1, false);
+				characters[0][2] = c;
+			}
+			if (column == 4 && row == 8) {
+				Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
+				ImageView clericBlue = new ImageView();
+				clericBlue.setFitWidth(75);
+				clericBlue.setPreserveRatio(true);
+				clericBlue.setImage(clericBlueImg);
+				this.getChildren().add(clericBlue);
+				c = new Cleric(4, 8, true);
+				characters[1][2] = c;
+			}
+			if ((column == 10 && row == 1)) {
+				Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
+				ImageView rogueRed = new ImageView();
+				rogueRed.setImage(rogueRedImg);
+				rogueRed.setFitWidth(75);
+				rogueRed.setPreserveRatio(true);
+
+				this.getChildren().add(rogueRed);
+				c = new Rogue(10, 1, false);
+				characters[0][3] = c;
+			}
+			if (column == 10 && row == 8) {
+				Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
+				ImageView rogueBlue = new ImageView();
+				rogueBlue.setFitWidth(75);
+				rogueBlue.setPreserveRatio(true);
+				rogueBlue.setImage(rogueBlueImg);
+				this.getChildren().add(rogueBlue);
+				c = new Rogue(10, 8, true);
+				characters[1][3] = c;
+			}
 		}
 
 		public void mouseHover() {
 			if (this.c != null) {
 				old = text.getText();
-				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName() + " the " + c.getClass().getSimpleName());
+				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName() + " the "
+						+ c.getClass().getSimpleName());
+
 			} else {
 				setText(old);
 			}
@@ -261,13 +351,13 @@ public class Board extends Application {
 		 * Handles the mouse event generated by clicking this tile
 		 */
 		public void mouseEvent() {
-			HashSet<Point> moves;
-			Point here = new Point(xloc, yloc);
 
-			//if multiplayer engaged and its not our turn do nothing
-			if (clientTeam != null && !turnHandler.vsAI && turnHandler.team == clientTeam) {
+			// if multiplayer engaged and its not our turn do nothing
+			if (connected && !turnHandler.vsAI && turnHandler.team == clientTeam) {
 				return;
 			}
+			HashSet<Point> moves;
+			Point here = new Point(xloc, yloc);
 
 			// If it is AI's turn, don't do anything
 			if (turnHandler.vsAI && turnHandler.team == true)
@@ -329,6 +419,10 @@ public class Board extends Application {
 			}
 		}
 
+		public void setState() {
+
+		}
+
 		public BaseCharacter getCharacter() {
 			return c;
 		}
@@ -370,16 +464,6 @@ public class Board extends Application {
 		public String toString() {
 			return "(" + xloc + ", " + yloc + ")";
 		}
-
-		public Boolean getGrassPlace() {
-			return grassPlace;
-		}
-
-
-		public Boolean getPathPlace() {
-			return pathPlace;
-		}
-
 	}
 
 	/**
@@ -433,11 +517,6 @@ public class Board extends Application {
 
 		}
 
-		public void endTurnMultiplayer() {
-			team = !team;
-			tempSquare = null;
-		}
-
 		public void endTurn() {
 			team = !team;
 			tempSquare = null;
@@ -445,6 +524,11 @@ public class Board extends Application {
 				connection.sendToggleTurn();
 			if (vsAI && team == true)
 				playAI();
+		}
+
+		public void endTurnMultiplayer() {
+			team = !team;
+			tempSquare = null;
 		}
 
 		private void playAI() {

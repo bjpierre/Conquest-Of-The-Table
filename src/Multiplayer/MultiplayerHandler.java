@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import GameBoard.Board;
@@ -246,7 +245,7 @@ public class MultiplayerHandler {
 
 		to.getChildren().add(from.getChildren().get(from.getChildren().size() - 1));
 		from.getChildren().remove(to.getChildren().get(to.getChildren().size() - 1));
-
+		sc.close();
 		return true;
 	}
 
@@ -279,6 +278,20 @@ public class MultiplayerHandler {
 		sc.next();
 		Square square = board[Integer.parseInt(sc.next())][Integer.parseInt(sc.next())];
 		square.removeCharacter();
+		sc.close();
+	}
+
+	
+	public Boolean getTeam() {
+		return id%2==0;
+	}
+	
+	public void sendToggleTurn() {
+		sendMessage("ToggleTurn-..");
+	}
+	
+	public void receiveToggleTurn() {
+		gameBoard.getTurnHandler().endTurnMultiplayer();
 	}
 
 }

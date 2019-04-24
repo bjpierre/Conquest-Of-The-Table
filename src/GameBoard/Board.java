@@ -1,8 +1,12 @@
 package GameBoard;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import Multiplayer.CharacterHandler;
 import Multiplayer.MultiplayerHandler;
@@ -18,6 +22,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -29,15 +34,19 @@ import sun.misc.Queue;
 public class Board extends Application {
 	public Square[][] box = new Square[10][15];
 	private BaseCharacter[][] characters;
-	
+
 	BorderPane border;
 
 	Button restart;
+
+	String old;
 
 	/**
 	 * Temp variable to track moving a unit
 	 */
 	protected Boolean moveCharacter;
+
+	Label text;
 
 	protected Square tempSquare;
 
@@ -54,6 +63,14 @@ public class Board extends Application {
 	 * Local class to handle turns
 	 */
 	protected turnHandler turnHandler;
+	/**
+	 * Represents the team Variable
+	 */
+	protected Boolean clientTeam;
+
+	public double sceneH;
+
+	public double sceneW;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -61,15 +78,31 @@ public class Board extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		//those in the first row are team 1, second team 2
-		characters = new BaseCharacter[2][5];
-		
-		connected = bootMultiplayer();
 
-		turnHandler = new turnHandler(false, true);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		sceneH = screenSize.getHeight();
+		sceneW = screenSize.getWidth();
+
+		// those in the first row are team 1, second team 2
+		characters = new BaseCharacter[2][5];
+
+		Boolean connect = VsPlayerPrompt("Would you like to play multiplayer?");
+		if (connect)
+			connected = bootMultiplayer();
+		else
+			connected = false;
+
+		if (!connect) {
+			turnHandler = new turnHandler(false, VsPlayerPrompt("Would you like to vs AI?"));
+		} else
+			turnHandler = new turnHandler(false, false);
+
+		if (clientTeam != null) {
+			System.out.println("You are representing team " + (clientTeam ? "blue!" : "red!"));
+		}
 
 		border = new BorderPane();
-		Scene scene = new Scene(border, 1500, 1000);
+		Scene scene = new Scene(border, sceneW, sceneH);
 
 		restart = new Button("Restart Game");
 		restart.setPadding(new Insets(10, 10, 10, 10));
@@ -89,6 +122,8 @@ public class Board extends Application {
 				connection.leaveServer();
 
 		});
+
+		stage.setFullScreen(true);
 	}
 
 	/**
@@ -96,6 +131,17 @@ public class Board extends Application {
 	 */
 	public void restart() {
 		buildBoard();
+	}
+
+	/**
+	 * Creates a prompt to see if the user wants to play vs a player or ai
+	 * 
+	 * @return
+	 */
+	public Boolean VsPlayerPrompt(String str) {
+		int response = JOptionPane.showConfirmDialog(null, str, "Mode Select", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE);
+		return response == JOptionPane.YES_OPTION;
 	}
 
 	/**
@@ -116,9 +162,22 @@ public class Board extends Application {
 
 		border.setRight(restart);
 		border.setCenter(game);
+		old = "Start!";
+		setText(old);
+
 		moveCharacter = false; // Selecting Character
 		tempSquare = null; // No square being moved ATM
 
+	}
+
+	public GameBoard.Board.turnHandler getTurnHandler() {
+		return turnHandler;
+	}
+
+	public void setText(String t) {
+		text = new Label(t);
+		text.setPadding(new Insets(10, 10, 10, 10));
+		this.border.setBottom(text);
 	}
 
 	/**
@@ -129,11 +188,14 @@ public class Board extends Application {
 	private boolean bootMultiplayer() {
 		try {
 			connection = new MultiplayerHandler("localhost", 5656, this);
+			Thread.sleep(500);
+			clientTeam = connection.getTeam();
 			return true;
 		} catch (Exception E) {
 			System.out.println("Unable to connect to server");
 			return false;
 		}
+
 	}
 
 	/**
@@ -153,61 +215,24 @@ public class Board extends Application {
 
 	public class Square extends StackPane {
 		private int xloc, yloc;
-		private BaseCharacter c;
+		public BaseCharacter c;
 		private Image grassImg = new Image(getClass().getResource("grassTile.jpg").toExternalForm());
 		private ImageView grass = new ImageView();
 		private Image pathImg = new Image(getClass().getResource("pathTile.jpg").toExternalForm());
 		private ImageView path = new ImageView();
-		private Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
-		private ImageView knightRed = new ImageView();
-		private Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
-		private ImageView wizardRed = new ImageView();
-		private Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
-		private ImageView clericRed = new ImageView();
-		private Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
-		private ImageView rogueRed = new ImageView();
-		private Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
-		private ImageView knightBlue = new ImageView();
-		private Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
-		private ImageView wizardBlue = new ImageView();
-		private Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
-		private ImageView clericBlue = new ImageView();
-		private Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
-		private ImageView rogueBlue = new ImageView();
-		private int grassPlace, pathPlace = 0;
-
 		// Used to create and update the board
 		public Square(int xloc, int yloc, int row, int column) {
 			this.setXloc(xloc);
 			this.setYloc(yloc);
 
 			grass.setImage(grassImg);
-			grassPlace = 1;
-
 			path.setImage(pathImg);
-
-			pathPlace = 1;
-
-			knightRed.setImage(knightRedImg);
-
-			wizardRed.setImage(wizardRedImg);
-
-			clericRed.setImage(clericRedImg);
-
-			rogueRed.setImage(rogueRedImg);
-
-			knightBlue.setImage(knightBlueImg);
-
-			wizardBlue.setImage(wizardBlueImg);
-
-			clericBlue.setImage(clericBlueImg);
-
-			rogueBlue.setImage(rogueBlueImg);
 
 			// Background color is white, boarders are black
 			this.setStyle("-fx-border-color: black;");
 			this.setPrefSize(76, 76);
 			this.setOnMouseClicked(e -> mouseEvent());
+			this.setOnMouseEntered(e -> mouseHover());
 
 			// movesTile.setFitWidth(99);
 			// movesTile.setPreserveRatio(true);
@@ -218,85 +243,107 @@ public class Board extends Application {
 			path.setFitWidth(75);
 			path.setPreserveRatio(true);
 
-			knightRed.setFitWidth(75);
-			knightRed.setPreserveRatio(true);
-
-			wizardRed.setFitWidth(75);
-			wizardRed.setPreserveRatio(true);
-
-			clericRed.setFitWidth(75);
-			clericRed.setPreserveRatio(true);
-
-			rogueRed.setFitWidth(75);
-			rogueRed.setPreserveRatio(true);
-
-			knightBlue.setFitWidth(75);
-			knightBlue.setPreserveRatio(true);
-
-			wizardBlue.setFitWidth(75);
-			wizardBlue.setPreserveRatio(true);
-
-			clericBlue.setFitWidth(75);
-			clericBlue.setPreserveRatio(true);
-
-			rogueBlue.setFitWidth(75);
-			rogueBlue.setPreserveRatio(true);
-
 			if (column != 7) {
 				this.getChildren().add(grass);
 			} else {
 				this.getChildren().add(path);
 			}
 
-			if (column == 1 && row == 1) {
+			if ((column == 1 && row == 1)||(column == 13 && row == 1)) {
+				Image knightRedImg = new Image(getClass().getResource("pixelKnightRed.png").toExternalForm());
+				ImageView knightRed = new ImageView();
+				knightRed.setImage(knightRedImg);
+				knightRed.setFitWidth(75);
+				knightRed.setPreserveRatio(true);
 				this.getChildren().add(knightRed);
 				c = new Fighter(1, 1, false);
-				characters[0][4] = c;
+				characters[0][(column==1?4:0)] = c;
 			}
-			if (column == 13 && row == 1) {
-				this.getChildren().add(knightRed);
-				c = new Fighter(13, 1, false);
-				characters[0][0] = c;
-			}
-			if (column == 1 && row == 8) {
+
+			if ((column == 1 && row == 8) || (column == 13 && row == 8)) {
+				Image knightBlueImg = new Image(getClass().getResource("pixelKnightBlue.png").toExternalForm());
+				ImageView knightBlue = new ImageView();
+				knightBlue.setImage(knightBlueImg);
+				knightBlue.setFitWidth(75);
+				knightBlue.setPreserveRatio(true);
+
 				this.getChildren().add(knightBlue);
 				c = new Fighter(1, 8, true);
-				characters[1][0] = c;
-			}
-			if (column == 13 && row == 8) {
-				this.getChildren().add(knightBlue);
-				c = new Fighter(13, 8, true);
-				characters[1][4] = c;
+				characters[1][(column==1?0:4)] = c;
 			}
 			if (column == 7 && row == 1) {
+				Image wizardRedImg = new Image(getClass().getResource("pixelWizardRed.png").toExternalForm());
+				ImageView wizardRed = new ImageView();
+				wizardRed.setImage(wizardRedImg);
+				wizardRed.setFitWidth(75);
+				wizardRed.setPreserveRatio(true);
 				this.getChildren().add(wizardRed);
-				c = new Wizard(7,1,false);
+				c = new Wizard(7, 1, false);
 				characters[0][1] = c;
 			}
 			if (column == 7 && row == 8) {
+				Image wizardBlueImg = new Image(getClass().getResource("pixelWizardBlue.png").toExternalForm());
+				ImageView wizardBlue = new ImageView();
+				wizardBlue.setFitWidth(75);
+				wizardBlue.setPreserveRatio(true);
+				wizardBlue.setImage(wizardBlueImg);
+				
 				this.getChildren().add(wizardBlue);
-				c = new Wizard(7,8,true);
+				c = new Wizard(7, 8, true);
 				characters[1][1] = c;
 			}
 			if (column == 4 && row == 1) {
+				Image clericRedImg = new Image(getClass().getResource("pixelClericRed.png").toExternalForm());
+				ImageView clericRed = new ImageView();
+				clericRed.setFitWidth(75);
+				clericRed.setPreserveRatio(true);
+				clericRed.setImage(clericRedImg);
+				
 				this.getChildren().add(clericRed);
-				c = new Cleric(4,1,false);
+				c = new Cleric(4, 1, false);
 				characters[0][2] = c;
 			}
 			if (column == 4 && row == 8) {
+				Image clericBlueImg = new Image(getClass().getResource("pixelClericBlue.png").toExternalForm());
+				ImageView clericBlue = new ImageView();
+				clericBlue.setFitWidth(75);
+				clericBlue.setPreserveRatio(true);
+				clericBlue.setImage(clericBlueImg);
 				this.getChildren().add(clericBlue);
-				c = new Cleric(4,8,true);
+				c = new Cleric(4, 8, true);
 				characters[1][2] = c;
 			}
-			if (column == 10 && row == 1) {
+			if ((column == 10 && row == 1)) {
+				Image rogueRedImg = new Image(getClass().getResource("pixelRogueRed.png").toExternalForm());
+				ImageView rogueRed = new ImageView();
+				rogueRed.setImage(rogueRedImg);
+				rogueRed.setFitWidth(75);
+				rogueRed.setPreserveRatio(true);
+
 				this.getChildren().add(rogueRed);
-				c = new Rogue(10,1,false);
+				c = new Rogue(10, 1, false);
 				characters[0][3] = c;
 			}
 			if (column == 10 && row == 8) {
+				Image rogueBlueImg = new Image(getClass().getResource("pixelRogueBlue.png").toExternalForm());
+				ImageView rogueBlue = new ImageView();
+				rogueBlue.setFitWidth(75);
+				rogueBlue.setPreserveRatio(true);
+				rogueBlue.setImage(rogueBlueImg);
 				this.getChildren().add(rogueBlue);
-				c = new Rogue(10,8,true);
+				c = new Rogue(10, 8, true);
 				characters[1][3] = c;
+			}
+		}
+
+		public void mouseHover() {
+			if (this.c != null) {
+				old = text.getText();
+				setText("HP: " + this.c.getHP() + " Name: " + this.c.getName() + " the "
+						+ c.getClass().getSimpleName());
+
+			} else {
+				setText(old);
 			}
 		}
 
@@ -304,74 +351,66 @@ public class Board extends Application {
 		 * Handles the mouse event generated by clicking this tile
 		 */
 		public void mouseEvent() {
+
+			// if multiplayer engaged and its not our turn do nothing
+			if (connected && !turnHandler.vsAI && turnHandler.team == clientTeam) {
+				return;
+			}
 			HashSet<Point> moves;
 			Point here = new Point(xloc, yloc);
-			
-			//If it is AI's turn, don't do anything
-			if(turnHandler.vsAI && turnHandler.team == true)
+
+			// If it is AI's turn, don't do anything
+			if (turnHandler.vsAI && turnHandler.team == true)
 				return;
-			
-			if(tempSquare == null)
-			{
-				 moves = CharacterAndBoardUtil.tempMoveList(xloc, yloc, box);
-				//first click
-				if(c != null && !c.getClicked() && c.getTeam() == turnHandler.team)
-				{
+
+			if (tempSquare == null) {
+				moves = CharacterAndBoardUtil.tempMoveList(xloc, yloc, box);
+				// first click
+				if (c != null && !c.getClicked() && c.getTeam() == turnHandler.team) {
 					c.setClicked(true);
 					tempSquare = this;
 					styleSquares(moves, "yellow");
 				}
-			}
-			else
-			{
+			} else {
 				moves = CharacterAndBoardUtil.tempMoveList(tempSquare.xloc, tempSquare.yloc, box);
-				//second click
-				if(this.equals(tempSquare))
-				{
-					//unselect
+				// second click
+				if (this.equals(tempSquare)) {
+					// unselect
 					c.setClicked(false);
 					styleSquares(moves, "black");
 					tempSquare = null;
-				}
-				else if (moves.contains(here))
-				{
-					//select move or attack
-					if(c == null)
-					{
-						//send the move to other player
+				} else if (moves.contains(here)) {
+					// select move or attack
+					if (c == null) {
+						// send the move to other player
 						if (connected)
 							connection.sendCharacterMove(tempSquare, this);
 
-						//style the squares back
+						// style the squares back
 						styleSquares(moves, "black");
 						setStyle("-fx-border-color: black;");
-		
-						//moves sprites
+
+						// moves sprites
 						List<Node> l = tempSquare.getChildren();
-						Node sprite = l.get(l.size()-1);
+						Node sprite = l.get(l.size() - 1);
 						this.addCharacter(tempSquare.c, sprite);
 						tempSquare.removeCharacter();
-						
+
 						c.setClicked(false);
-						
+
 						turnHandler.endTurn();
-					}
-					else if (tempSquare.c.getTeam() != c.getTeam())
-					{
-						//combat
-						if(CharacterAndBoardUtil.handleCombat(tempSquare.getCharacter(), c))
-						{
+					} else if (tempSquare.c.getTeam() != c.getTeam()) {
+						// combat
+						if (CharacterAndBoardUtil.handleCombat(tempSquare.getCharacter(), c)) {
 							System.out.println("PLAYER " + (turnHandler.team ? 2 : 1) + " HITs");
 							if (connected)
 								connection.sendRemoveCharacter(this);
 							removeCharacter();
-							this.getChildren().remove(this.getChildren().size()-1);
-						}
-						else
-						{
+							this.getChildren().remove(this.getChildren().size() - 1);
+						} else {
 							System.out.println("PLAYER " + (turnHandler.team ? 2 : 1) + " MISSes");
 						}
-						
+
 						styleSquares(moves, "black");
 						tempSquare.c.setClicked(false);
 						turnHandler.endTurn();
@@ -413,17 +452,16 @@ public class Board extends Application {
 		 */
 		public void removeCharacter() {
 			c = null;
-			//this.getChildren().remove(this.getChildren().size()-1);
+			// this.getChildren().remove(this.getChildren().size()-1);
 		}
-		
+
 		public void addCharacter(BaseCharacter bc, Node sprite) {
 			c = bc;
 			c.setLoc(xloc, yloc);
 			getChildren().add(sprite);
 		}
 
-		public String toString()
-		{
+		public String toString() {
 			return "(" + xloc + ", " + yloc + ")";
 		}
 	}
@@ -482,10 +520,17 @@ public class Board extends Application {
 		public void endTurn() {
 			team = !team;
 			tempSquare = null;
-			if(vsAI && team == true)
+			if (connected)
+				connection.sendToggleTurn();
+			if (vsAI && team == true)
 				playAI();
 		}
-		
+
+		public void endTurnMultiplayer() {
+			team = !team;
+			tempSquare = null;
+		}
+
 		private void playAI() {
 			AIUtil.AIUpdateBoard(characters, box);
 			team = !team;

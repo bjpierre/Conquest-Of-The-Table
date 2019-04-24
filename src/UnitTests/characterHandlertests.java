@@ -24,20 +24,5 @@ class characterHandlertests {
 		assertFalse(demo.getClicked());
 	}
 	
-	@Test
-	void testSetersAndGetters() {
-		CharacterHandler demo = new CharacterHandler(null,null,null);
-		demo.setCharacter(new Fighter());
-		demo.setClicked(true);
-		demo.setTeam(true);
-		demo.setPoint(new Point(1,1));
-		
-		assertEquals(demo.getCharacter().getClass(), new Fighter().getClass());
-		assertTrue(demo.getClicked());
-		assertTrue(demo.getTeam());
-		assertNotNull(demo.getPoint());
-		assertEquals(demo.getX(),1);
-		assertEquals(demo.getY(),1);
-	}
 
 }

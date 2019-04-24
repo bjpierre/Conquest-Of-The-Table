@@ -28,6 +28,7 @@ public class BaseCharacter {
 	private boolean isSelected;
 	protected boolean team;
 	private int x, y;
+	public String name;
 	
 	public BaseCharacter(int hpDiceSides, Random r)
 	{
@@ -70,6 +71,7 @@ public class BaseCharacter {
 		this.x = x;
 		this.y = y;
 		this.team = team;
+		this.name = getStringName();
 	}
 	
 	public int rollInit()
@@ -206,4 +208,22 @@ public class BaseCharacter {
 		x = newX;
 		y = newY;
 	}
+	private String getStringName()
+	{	
+		String [] names;
+		names = new String[] { "Liam", "Noah", "Sam", "Nate", "Bob", "Pat", "Pete",
+			"Conor", "Ben", "Tyler", "Evan", "William", "Elijah", "Oliver", "Jacob",
+			"Michael", "Alexander", "Lucas", "Daniel", "Matthew", "Henry", "Owen", 
+			"John", "Gabriel", "Luke", "Anthony", "Isaac", "Jack", "Levi", "Ryan"
+		};
+		Random ran = new Random();
+		int t = ran.nextInt(30);
+		return names[t];
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+
 }
